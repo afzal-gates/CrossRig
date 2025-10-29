@@ -1,0 +1,50 @@
+# Mixanimo Lite - Git Ignore
+
+# Build artifacts
+*.zip
+*_temp/
+Mixanimo_Lite_temp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Blender temp files
+*.blend1
+*.blend2
+*.blend@
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Packaging scripts (keep in repo but ignore temp outputs)
+# create_addon_zip.bat - keep
+# create_addon_zip.ps1 - keep
+
+# Logs
+*.log
+
+# Test files
+test_*.blend
+temp_*.blend
+
+# Backup files
+*.backup
+__init__.py.backup

@@ -1,0 +1,342 @@
+{
+  "name": "Mixamo_to_AccuRig",
+  "source_armature_name": "Mixamo_Rig",
+  "target_armature_name": "AccuRig_Character",
+  "description": "Standard bone mapping from Mixamo (mixamorig:) to AccuRig humanoid rig. This preset should work with most Mixamo characters and AccuRig humanoid rigs.",
+  "mappings": [
+    {
+      "source_bone": "mixamorig:Hips",
+      "target_bone": "Root",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:Spine",
+      "target_bone": "Spine1",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:Spine1",
+      "target_bone": "Spine2",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:Spine2",
+      "target_bone": "Spine3",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:Neck",
+      "target_bone": "Neck",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:Head",
+      "target_bone": "Head",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:HeadTop_End",
+      "target_bone": "HeadTop_End",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:LeftShoulder",
+      "target_bone": "Shoulder.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftArm",
+      "target_bone": "UpperArm.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftForeArm",
+      "target_bone": "LowerArm.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHand",
+      "target_bone": "Hand.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandThumb1",
+      "target_bone": "Thumb1.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandThumb2",
+      "target_bone": "Thumb2.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandThumb3",
+      "target_bone": "Thumb3.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandThumb4",
+      "target_bone": "Thumb4.L",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:LeftHandIndex1",
+      "target_bone": "Index1.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandIndex2",
+      "target_bone": "Index2.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandIndex3",
+      "target_bone": "Index3.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandIndex4",
+      "target_bone": "Index4.L",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:LeftHandMiddle1",
+      "target_bone": "Middle1.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandMiddle2",
+      "target_bone": "Middle2.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandMiddle3",
+      "target_bone": "Middle3.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandMiddle4",
+      "target_bone": "Middle4.L",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:LeftHandRing1",
+      "target_bone": "Ring1.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandRing2",
+      "target_bone": "Ring2.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandRing3",
+      "target_bone": "Ring3.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandRing4",
+      "target_bone": "Ring4.L",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:LeftHandPinky1",
+      "target_bone": "Pinky1.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandPinky2",
+      "target_bone": "Pinky2.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandPinky3",
+      "target_bone": "Pinky3.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftHandPinky4",
+      "target_bone": "Pinky4.L",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:RightShoulder",
+      "target_bone": "Shoulder.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightArm",
+      "target_bone": "UpperArm.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightForeArm",
+      "target_bone": "LowerArm.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHand",
+      "target_bone": "Hand.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandThumb1",
+      "target_bone": "Thumb1.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandThumb2",
+      "target_bone": "Thumb2.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandThumb3",
+      "target_bone": "Thumb3.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandThumb4",
+      "target_bone": "Thumb4.R",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:RightHandIndex1",
+      "target_bone": "Index1.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandIndex2",
+      "target_bone": "Index2.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandIndex3",
+      "target_bone": "Index3.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandIndex4",
+      "target_bone": "Index4.R",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:RightHandMiddle1",
+      "target_bone": "Middle1.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandMiddle2",
+      "target_bone": "Middle2.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandMiddle3",
+      "target_bone": "Middle3.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandMiddle4",
+      "target_bone": "Middle4.R",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:RightHandRing1",
+      "target_bone": "Ring1.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandRing2",
+      "target_bone": "Ring2.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandRing3",
+      "target_bone": "Ring3.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandRing4",
+      "target_bone": "Ring4.R",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:RightHandPinky1",
+      "target_bone": "Pinky1.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandPinky2",
+      "target_bone": "Pinky2.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandPinky3",
+      "target_bone": "Pinky3.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightHandPinky4",
+      "target_bone": "Pinky4.R",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:LeftUpLeg",
+      "target_bone": "Thigh.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftLeg",
+      "target_bone": "Shin.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftFoot",
+      "target_bone": "Foot.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftToeBase",
+      "target_bone": "Toe.L",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:LeftToe_End",
+      "target_bone": "ToeEnd.L",
+      "confidence": 0.9
+    },
+    {
+      "source_bone": "mixamorig:RightUpLeg",
+      "target_bone": "Thigh.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightLeg",
+      "target_bone": "Shin.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightFoot",
+      "target_bone": "Foot.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightToeBase",
+      "target_bone": "Toe.R",
+      "confidence": 1.0
+    },
+    {
+      "source_bone": "mixamorig:RightToe_End",
+      "target_bone": "ToeEnd.R",
+      "confidence": 0.9
+    }
+  ],
+  "metadata": {
+    "created_date": "2025-10-29T12:00:00",
+    "modified_date": "2025-10-29T12:00:00",
+    "source_bone_count": 65,
+    "target_bone_count": 65,
+    "mapped_count": 65,
+    "auto_mapped_count": 0
+  },
+  "version": "1.0"
+}

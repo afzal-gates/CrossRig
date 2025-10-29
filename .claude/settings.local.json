@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//e/AddOns/Mixanimo_Lite/**)",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh --version:*)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
