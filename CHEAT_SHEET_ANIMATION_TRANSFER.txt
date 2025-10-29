@@ -1,0 +1,251 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                 MIXANIMO BONE MAPPING CHEAT SHEET                     ║
+║                    Animation Transfer Quick Guide                     ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ METHOD 1: USE PRE-BUILT PRESET (Mixamo → AccuRig)         45 seconds│
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  1. Select source armature (Mixamo)                                  │
+│  2. Animation Manage → Save Animation → "MyAnim" → OK                │
+│  3. Bone Mapping → Mapping Presets → Browse Mappings                 │
+│     → examples/Mixamo_to_AccuRig.json → OK                           │
+│  4. Select target armature (AccuRig)                                 │
+│  5. Apply Animation → Apply Animation with Mapping                   │
+│     → Select "MyAnim" → OK                                           │
+│  6. Press SPACEBAR to play ✓                                         │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ METHOD 2: AUTO-MAP (Any Rig → Any Rig)                    60 seconds│
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  1. Select source → Animation Manage → Save Animation                │
+│  2. Bone Mapping → Setup:                                            │
+│     - Source Armature: [select]                                      │
+│     - Target Armature: [select]                                      │
+│     - Preset Name: "Source_to_Target"                                │
+│     - Click: Create Bone Mapping                                     │
+│  3. Auto-Map Threshold: 0.7                                          │
+│     Click: Auto-Map Bones                                            │
+│  4. Mapping Presets → Save Mapping → OK                              │
+│  5. Select target armature                                           │
+│  6. Apply Animation → Apply with Mapping → Select anim → OK          │
+│  7. Press SPACEBAR to verify ✓                                       │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                          PANEL LOCATION                               ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║  3D Viewport → Press N → "Mixanimo Lite" tab                         ║
+║                                                                       ║
+║  Sections:                                                            ║
+║    ├─ Play Ground                                                     ║
+║    ├─ ★ Bone Mapping  ← USE THIS!                                    ║
+║    ├─ Armature Manage                                                 ║
+║    └─ Animation Manage                                                ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ BONE MAPPING SECTION LAYOUT                                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ▼ Setup                                                              │
+│    Source Armature:   [Choose...]                                    │
+│    Target Armature:   [Choose...]                                    │
+│    Preset Name:       [Enter name]                                   │
+│    [Create Bone Mapping]                                             │
+│    Auto-Mapping:                                                     │
+│      Threshold: ████████░░ 0.70                                      │
+│      [Auto-Map Bones]                                                │
+│                                                                       │
+│  ▼ Bone Mappings                                                      │
+│    Source Bone → Target Bone     Confidence                          │
+│    Hips        → Root                 ✓                              │
+│    Spine       → Spine1              95%                             │
+│    LeftArm     → UpperArm.L          85%                             │
+│    ...                                                               │
+│                                                                       │
+│  ▼ Mapping Presets                                                    │
+│    [Save Mapping]  [Load]                                            │
+│    [Browse Mappings]  [Delete]                                       │
+│                                                                       │
+│  ▼ Apply Animation                                                    │
+│    [Apply Animation with Mapping]                                    │
+│    [Validate Mapping]                                                │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                        THRESHOLD SETTINGS                             ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║  0.9  Very Strict    ▓▓▓▓▓▓▓▓▓░  60% mapped, 0% errors               ║
+║  0.8  Strict         ▓▓▓▓▓▓▓▓░░  80% mapped, <1% errors              ║
+║  0.7  Recommended ★  ▓▓▓▓▓▓▓░░░  95% mapped, <2% errors              ║
+║  0.6  Permissive     ▓▓▓▓▓▓░░░░  100% mapped, 5% errors              ║
+║  0.5  Too Low        ▓▓▓▓▓░░░░░  100% mapped, 10%+ errors            ║
+║                                                                       ║
+║  Use 0.7 for Mixamo → AccuRig                                         ║
+║  Use 0.65-0.75 for custom rigs                                        ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ CONFIDENCE BADGES (In Bone Mappings List)                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ✓        100% - Manual or exact match (perfect)                     │
+│  90-99%   High confidence auto-map (very good)                       │
+│  80-89%   Good auto-map (probably correct)                           │
+│  70-79%   Medium confidence (review this)                            │
+│  60-69%   Low confidence (likely wrong)                              │
+│  ?        Not mapped (needs attention)                               │
+│                                                                       │
+│  Action: Click row to edit mapping with search dropdown              │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                          QUICK CHECKS                                 ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║  BEFORE APPLYING:                                                     ║
+║    □ Target armature is selected (orange highlight)                  ║
+║    □ Bone mappings list is populated                                 ║
+║    □ At least 90% of bones mapped                                    ║
+║    □ No unmapped critical bones (Hips, Spine, Arms, Legs)            ║
+║                                                                       ║
+║  AFTER APPLYING:                                                      ║
+║    □ Press SPACEBAR - animation plays                                ║
+║    □ All body parts move naturally                                   ║
+║    □ No console errors                                               ║
+║    □ Left/right sides correct                                        ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                                      │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  PROBLEM: Animation doesn't apply                                    │
+│  FIX: • Is target armature selected?                                 │
+│       • Are there bone mappings in list?                             │
+│       • Try clicking target armature again                           │
+│                                                                       │
+│  PROBLEM: Some body parts don't move                                 │
+│  FIX: • Check console for unmapped bones                             │
+│       • Lower threshold to 0.65 and auto-map again                   │
+│       • Click "Validate Mapping" to see issues                       │
+│                                                                       │
+│  PROBLEM: Animation looks broken                                     │
+│  FIX: • Review all mappings with confidence < 80%                    │
+│       • Check left/right bones map to correct sides                  │
+│       • Test with simple animation first (walk/idle)                 │
+│                                                                       │
+│  PROBLEM: Fingers don't animate                                      │
+│  FIX: • Check if target rig has finger bones                         │
+│       • Lower threshold to 0.6 for finger matching                   │
+│       • Manually map finger bones if needed                          │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                            PRO TIPS                                   ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║  ★ Save preset after first successful transfer - reuse forever!      ║
+║  ★ Test with simple animation first (walk, idle)                     ║
+║  ★ Check console (Window → Toggle System Console) for details        ║
+║  ★ For Mixamo → AccuRig: Use threshold 0.7, expect 95-100% success   ║
+║  ★ Batch transfer: Create mapping once, apply to 100+ animations     ║
+║  ★ Critical bones to verify: Hips, Spine, Arms, Legs                 ║
+║  ★ Edit mappings: Click row → use search dropdown                    ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ FILE LOCATIONS                                                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Saved Animations:                                                   │
+│    Windows:   C:\Users\[You]\.mixanimo_animations\                   │
+│    Mac/Linux: ~/.mixanimo_animations/                                │
+│                                                                       │
+│  Bone Mapping Presets:                                               │
+│    Windows:   C:\Users\[You]\.mixanimo_bone_mappings\                │
+│    Mac/Linux: ~/.mixanimo_bone_mappings/                             │
+│                                                                       │
+│  Example Presets:                                                    │
+│    [Blender Addons]/Mixanimo_Lite/examples/                          │
+│    └─ Mixamo_to_AccuRig.json                                         │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                         KEYBOARD SHORTCUTS                            ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║  N          Toggle sidebar (show Mixanimo panel)                     ║
+║  SPACEBAR   Play/pause animation                                     ║
+║  ALT+A      Play animation (alternative)                             ║
+║  SHIFT+←    Jump to first frame                                      ║
+║  SHIFT+→    Jump to last frame                                       ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ TIME SAVINGS                                                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Manual retargeting:           ~5-10 minutes per animation           │
+│  With bone mapping (first):    ~2 minutes                            │
+│  With saved preset:            ~30 seconds                           │
+│                                                                       │
+│  Example: 100 animations                                             │
+│  Manual:    500-1000 minutes  (8-16 hours!)                          │
+│  Automated: 50 minutes         (80-90% time saved)                   │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                    EXPECTED RESULTS BY RIG TYPE                       ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║  Mixamo → AccuRig (Standard)                                          ║
+║    Coverage: 95-100% automatic                                        ║
+║    Edits: 0-3 bones                                                   ║
+║    Time: ~30 seconds                                                  ║
+║    Confidence: High (0.85-1.0)                                        ║
+║                                                                       ║
+║  Mixamo → Rigify                                                      ║
+║    Coverage: 85-95% automatic                                         ║
+║    Edits: 3-10 bones                                                  ║
+║    Time: ~60 seconds                                                  ║
+║    Confidence: Medium-High (0.75-0.9)                                 ║
+║                                                                       ║
+║  Custom → Custom                                                      ║
+║    Coverage: 70-90% automatic                                         ║
+║    Edits: 5-20 bones                                                  ║
+║    Time: ~2 minutes                                                   ║
+║    Confidence: Medium (0.7-0.85)                                      ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════
+                        NEED MORE HELP?
+═══════════════════════════════════════════════════════════════════════
+
+  Detailed Workflow:      APPLY_ANIMATION_WORKFLOW.md
+  Mixamo/AccuRig Guide:   MIXAMO_ACCURIG_MAPPING_GUIDE.md
+  Feature Overview:       BONE_MAPPING_QUICKSTART.md
+  Quick Visual Guide:     QUICK_START_ANIMATION_TRANSFER.md
+
+═══════════════════════════════════════════════════════════════════════
+           Mixanimo Lite v1.4.0 - Bone Mapping Feature
+═══════════════════════════════════════════════════════════════════════
