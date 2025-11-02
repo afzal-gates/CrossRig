@@ -175,8 +175,24 @@ class CROSSRIG_OT_PickLandmark(Operator):
             result, location, normal, index = mesh_obj.ray_cast(ray_origin_obj, ray_direction_obj)
 
             if result:
+                # Perform opposite raycast to find interior/center position
+                # Cast ray from opposite direction to find the "depth"
+                opposite_ray_origin = location + (ray_direction_obj * 10)  # Start beyond the mesh
+                opposite_ray_direction = -ray_direction_obj
+
+                result_back, location_back, normal_back, index_back = mesh_obj.ray_cast(
+                    opposite_ray_origin, opposite_ray_direction
+                )
+
+                if result_back:
+                    # Calculate center point between front and back hit
+                    center_pos = (location + location_back) / 2
+                else:
+                    # If back raycast fails, offset inward from surface using normal
+                    center_pos = location - (normal * 0.05)  # 5cm inward
+
                 # Convert back to world space
-                world_pos = mesh_obj.matrix_world @ location
+                world_pos = mesh_obj.matrix_world @ center_pos
 
                 # Store landmark
                 settings = context.scene.crossrig_settings

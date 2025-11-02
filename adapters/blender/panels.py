@@ -363,7 +363,8 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                     # Show mode-specific instructions
                     if prefs.smart_rig_bone_set == 'SMART':
                         inner_box.label(text="SMART MODE: Pick 6 landmarks", icon='INFO')
-                        inner_box.label(text="Click button → Click on mesh surface", icon='HAND')
+                        inner_box.label(text="Click button → Click on mesh", icon='HAND')
+                        inner_box.label(text="Bones placed at center of mass", icon='PIVOT_MEDIAN')
 
                         # Show only required landmarks for SMART mode
                         flow = inner_box.grid_flow(row_major=True, columns=1, align=True)
