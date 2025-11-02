@@ -5,6 +5,106 @@ All notable changes to CrossRig will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-11-02
+
+### Added - Smart Rig Feature (Auto-Rig Pro-like Functionality)
+
+#### Core Feature: Automatic Armature Generation from Mesh Landmarks
+- **Visual Landmark Selection**: Click vertices directly on mesh to define skeleton key points
+  - Color-coded visual markers (red=left, blue=right, green=center)
+  - Support for 20+ anatomical landmarks (head, spine, arms, legs)
+  - Real-time visual feedback with sphere markers
+  - Edit mode integration for precise vertex selection
+
+- **Automatic Bone Generation**: Intelligent skeleton creation from minimal input
+  - Complete bone hierarchy with proper parent-child relationships
+  - Industry-standard bone naming (e.g., `upper_arm.L`, `thigh.R`, `spine_02`)
+  - Automatic bone orientation and alignment
+  - Smart bone chain creation (spine, arms, legs)
+  - Root bone for animation compatibility
+
+- **Bilateral Symmetry Support**: Advanced mirroring for symmetric characters
+  - Auto-detect and mirror landmarks across X-axis
+  - One-click symmetry for arms, legs, and bilateral features
+  - Intelligent detection of missing opposite-side landmarks
+  - Preserves anatomical accuracy during mirroring
+
+- **Automatic Skinning**: Optional automatic mesh parenting with weights
+  - Uses Blender's automatic weight painting algorithm
+  - Instant mesh-to-armature binding
+  - Saves hours of manual weight painting
+  - Production-ready base weights for refinement
+
+- **Smart Rig UI Panel**: Intuitive interface in Armature Manage section
+  - Step-by-step landmark picking workflow
+  - Organized by body region (head, spine, arms, legs)
+  - Landmark counter and progress tracking
+  - Clear visual state indicators
+  - Quick access to all features
+
+#### Landmarks Supported:
+**Head & Spine (Center):**
+- Head Top, Neck, Spine Top, Spine Mid, Hips
+
+**Arms (Bilateral):**
+- Shoulder, Elbow, Wrist, Hand (Left/Right)
+
+**Legs (Bilateral):**
+- Hip, Knee, Ankle, Foot, Toe (Left/Right)
+
+#### Technical Implementation:
+- **New Operators** (`smart_rig_operators.py`):
+  - `CROSSRIG_OT_StartSmartRigMode`: Enter landmark selection mode
+  - `CROSSRIG_OT_PickLandmark`: Select vertex as landmark with side specification
+  - `CROSSRIG_OT_ClearLandmark`: Remove individual landmark
+  - `CROSSRIG_OT_ClearAllLandmarks`: Reset all landmarks
+  - `CROSSRIG_OT_AutoDetectSymmetry`: Mirror landmarks for symmetry
+  - `CROSSRIG_OT_GenerateSmartRig`: Generate armature from landmarks
+  - `CROSSRIG_OT_ExitSmartRigMode`: Exit without generating
+
+- **New Service** (`smart_rig_service.py`):
+  - `generate_armature_from_landmarks()`: Core rig generation algorithm
+  - Bone naming conventions and hierarchy logic
+  - Automatic roll calculation for proper bone orientation
+  - Bone chain creation with parent relationships
+  - Integration with Blender's automatic weight system
+
+- **New Properties** (`properties.py`):
+  - `SmartRigLandmark`: Store landmark ID, side, and 3D position
+  - `smart_rig_active`: Track landmark selection mode state
+  - `smart_rig_target_mesh`: Reference to target mesh object
+  - `smart_rig_landmarks`: Collection of picked landmarks
+  - `show_smart_rig`: UI panel visibility toggle
+
+- **UI Integration** (`panels.py`):
+  - Smart Rig subsection in Armature Manage
+  - Dynamic UI based on mode state
+  - Organized landmark picking buttons
+  - Visual landmark counter and feedback
+  - Integrated generation and cleanup controls
+
+#### Workflow Benefits:
+✅ **Fast Rigging**: Generate complete skeleton in minutes vs hours
+✅ **Accurate Placement**: Direct vertex selection ensures precision
+✅ **Flexible**: Works with any humanoid or creature mesh
+✅ **Production-Ready**: Standard bone names work with game engines
+✅ **Non-Destructive**: Visual markers can be cleared without affecting mesh
+✅ **Iterative**: Easy to adjust landmarks and regenerate
+
+#### Documentation:
+- Complete user guide: `SMART_RIG_GUIDE.md`
+- Step-by-step workflow instructions
+- Tips and best practices
+- Troubleshooting guide
+- Technical reference for customization
+
+#### Comparison with Auto-Rig Pro:
+- Similar visual landmark selection workflow
+- Automatic bone generation and naming
+- Symmetry support and automatic skinning
+- Open source and fully customizable
+- Integrated with CrossRig animation pipeline
+
 ## [1.0.1] - 2025-10-29
 
 ### Fixed

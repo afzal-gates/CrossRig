@@ -325,6 +325,102 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
         if prefs.show_armature_manage:
             col = box.column(align=True)
 
+            # === Smart Rig Subsection ===
+            row = col.row(align=True)
+            sub_icon = 'TRIA_DOWN' if prefs.show_smart_rig else 'TRIA_RIGHT'
+            row.prop(prefs, "show_smart_rig", icon=sub_icon, icon_only=True, emboss=False)
+            row.label(text="Smart Rig (Auto-Generate)", icon='MOD_ARMATURE')
+
+            if prefs.show_smart_rig:
+                sub_box = col.box()
+
+                if not prefs.smart_rig_active:
+                    # Not in smart rig mode - show start button
+                    row = sub_box.row()
+                    row.operator("crossrig.start_smart_rig_mode", text="Start Smart Rig Mode", icon='PLAY')
+                    row = sub_box.row()
+                    row.label(text="Select mesh and click Start", icon='INFO')
+                else:
+                    # In smart rig mode - show landmark picking interface
+                    row = sub_box.row()
+                    row.label(text=f"Target: {prefs.smart_rig_target_mesh.name}", icon='MESH_DATA')
+
+                    # Landmark count
+                    landmark_count = len(prefs.smart_rig_landmarks)
+                    row = sub_box.row()
+                    row.label(text=f"Landmarks: {landmark_count}", icon='EMPTY_DATA')
+
+                    # Quick landmark buttons
+                    inner_box = sub_box.box()
+                    inner_box.label(text="Pick Landmarks (Select vertex in Edit mode)", icon='VERTEXSEL')
+
+                    # Head/Neck landmarks
+                    flow = inner_box.grid_flow(row_major=True, columns=2, align=True)
+                    op = flow.operator("crossrig.pick_landmark", text="Head Top")
+                    op.landmark_id = "head_top"
+                    op.landmark_side = 'CENTER'
+
+                    op = flow.operator("crossrig.pick_landmark", text="Neck")
+                    op.landmark_id = "neck"
+                    op.landmark_side = 'CENTER'
+
+                    # Spine landmarks
+                    flow = inner_box.grid_flow(row_major=True, columns=3, align=True)
+                    op = flow.operator("crossrig.pick_landmark", text="Spine Top")
+                    op.landmark_id = "spine_top"
+                    op.landmark_side = 'CENTER'
+
+                    op = flow.operator("crossrig.pick_landmark", text="Spine Mid")
+                    op.landmark_id = "spine_mid"
+                    op.landmark_side = 'CENTER'
+
+                    op = flow.operator("crossrig.pick_landmark", text="Hips")
+                    op.landmark_id = "spine_bottom"
+                    op.landmark_side = 'CENTER'
+
+                    # Bilateral landmarks - Arms
+                    inner_box.label(text="Arms (L/R):", icon='CONSTRAINT_BONE')
+                    flow = inner_box.grid_flow(row_major=True, columns=2, align=True)
+
+                    for limb_part in [('shoulder', 'Shoulder'), ('elbow', 'Elbow'), ('wrist', 'Wrist'), ('hand', 'Hand')]:
+                        row_lr = flow.row(align=True)
+                        op_l = row_lr.operator("crossrig.pick_landmark", text=f"L {limb_part[1]}")
+                        op_l.landmark_id = limb_part[0]
+                        op_l.landmark_side = 'LEFT'
+
+                        op_r = row_lr.operator("crossrig.pick_landmark", text=f"R {limb_part[1]}")
+                        op_r.landmark_id = limb_part[0]
+                        op_r.landmark_side = 'RIGHT'
+
+                    # Bilateral landmarks - Legs
+                    inner_box.label(text="Legs (L/R):", icon='CONSTRAINT_BONE')
+                    flow = inner_box.grid_flow(row_major=True, columns=2, align=True)
+
+                    for limb_part in [('hip', 'Hip'), ('knee', 'Knee'), ('ankle', 'Ankle'), ('foot', 'Foot'), ('toe', 'Toe')]:
+                        row_lr = flow.row(align=True)
+                        op_l = row_lr.operator("crossrig.pick_landmark", text=f"L {limb_part[1]}")
+                        op_l.landmark_id = limb_part[0]
+                        op_l.landmark_side = 'LEFT'
+
+                        op_r = row_lr.operator("crossrig.pick_landmark", text=f"R {limb_part[1]}")
+                        op_r.landmark_id = limb_part[0]
+                        op_r.landmark_side = 'RIGHT'
+
+                    # Symmetry tools
+                    row = sub_box.row(align=True)
+                    row.operator("crossrig.auto_detect_symmetry", text="Auto-Mirror Landmarks", icon='MOD_MIRROR')
+
+                    # Actions
+                    row = sub_box.row(align=True)
+                    row.operator("crossrig.generate_smart_rig", text="Generate Rig", icon='ARMATURE_DATA')
+                    row.operator("crossrig.clear_all_landmarks", text="Clear All", icon='X')
+
+                    row = sub_box.row()
+                    row.operator("crossrig.exit_smart_rig_mode", text="Exit Mode", icon='CANCEL')
+
+            # === Template Management Subsection ===
+            col.separator()
+
             # Save armature structure
             row = col.row()
             row.operator("crossrig.save_armature_template", text="Save Armature Structure", icon='ARMATURE_DATA')

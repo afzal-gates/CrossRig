@@ -98,6 +98,34 @@ class BoneMappingItem(PropertyGroup):
     )
 
 
+class SmartRigLandmark(PropertyGroup):
+    """Property group for smart rig landmark points."""
+
+    landmark_id: StringProperty(
+        name="Landmark ID",
+        description="Identifier for this landmark (e.g., 'neck', 'shoulder', 'hip')"
+    )
+
+    landmark_side: EnumProperty(
+        name="Side",
+        description="Which side this landmark is on",
+        items=[
+            ('CENTER', 'Center', 'Center/midline landmark'),
+            ('LEFT', 'Left', 'Left side of body'),
+            ('RIGHT', 'Right', 'Right side of body'),
+        ],
+        default='CENTER'
+    )
+
+    position: FloatVectorProperty(
+        name="Position",
+        description="World space position of this landmark",
+        size=3,
+        default=(0.0, 0.0, 0.0),
+        subtype='XYZ'
+    )
+
+
 class CrossRigSettings(PropertyGroup):
     """Main settings property group for the addon."""
 
@@ -243,11 +271,37 @@ class CrossRigSettings(PropertyGroup):
         default=True
     )
 
+    # Smart Rig Properties
+    smart_rig_active: BoolProperty(
+        name="Smart Rig Active",
+        description="Smart rig landmark selection mode is active",
+        default=False
+    )
+
+    smart_rig_target_mesh: PointerProperty(
+        name="Target Mesh",
+        description="Mesh object for smart rig generation",
+        type=bpy.types.Object,
+        poll=lambda self, obj: obj.type == 'MESH'
+    )
+
+    smart_rig_landmarks: CollectionProperty(
+        type=SmartRigLandmark,
+        name="Smart Rig Landmarks"
+    )
+
+    show_smart_rig: BoolProperty(
+        name="Smart Rig",
+        description="Show/Hide Smart Rig subsection",
+        default=False
+    )
+
 
 # Classes to register
 classes = (
     CrossRigActionItem,
     BoneMappingItem,
+    SmartRigLandmark,
     CrossRigSettings,
 )
 
