@@ -11,10 +11,15 @@ Write-Host ""
 
 # Set variables
 $AddonName = "CrossRig"
-$Version = "1.0.1"
+$Version = "1.1.0"
 $ReleaseDir = "release"
-$OutputZip = "${ReleaseDir}\${AddonName}_v${Version}.zip"
 $TempDir = "${AddonName}_temp"
+
+# Generate timestamp (YYYYMMDD_HHMMSS format)
+$Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+
+# Create output filename with version and timestamp
+$OutputZip = "${ReleaseDir}\${AddonName}_v${Version}_${Timestamp}.zip"
 
 # Create release directory if it doesn't exist
 if (-not (Test-Path $ReleaseDir)) {

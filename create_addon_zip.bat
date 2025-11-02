@@ -12,10 +12,15 @@ echo.
 
 REM Set variables
 set ADDON_NAME=CrossRig
-set VERSION=1.0.1
+set VERSION=1.1.0
 set RELEASE_DIR=release
-set OUTPUT_ZIP=%RELEASE_DIR%\%ADDON_NAME%_v%VERSION%.zip
 set TEMP_DIR=%ADDON_NAME%_temp
+
+REM Generate timestamp using PowerShell (YYYYMMDD_HHMMSS format)
+for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "Get-Date -Format 'yyyyMMdd_HHmmss'"`) do set TIMESTAMP=%%i
+
+REM Create output filename with version and timestamp
+set OUTPUT_ZIP=%RELEASE_DIR%\%ADDON_NAME%_v%VERSION%_%TIMESTAMP%.zip
 
 REM Create release directory if it doesn't exist
 if not exist "%RELEASE_DIR%" (
