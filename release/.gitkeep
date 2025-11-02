@@ -1,0 +1,2 @@
+# This file ensures the release folder is tracked by Git
+# The actual release zip files are excluded via .gitignore

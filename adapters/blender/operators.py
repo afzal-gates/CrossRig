@@ -333,17 +333,17 @@ class CROSSRIG_OT_DisabledFeature(Operator):
 
 # Classes to register
 classes = (
-    MIXAMO_OT_SelectArmatureFromList,
-    MIXAMO_OT_GetActions,
-    MIXAMO_OT_MoveActionUp,
-    MIXAMO_OT_MoveActionDown,
-    MIXAMO_OT_ConfirmOrder,
-    MIXAMO_OT_SendToTimeline,
-    MIXAMO_OT_BakeAction,
-    MIXAMO_OT_StabilizeRoot,
-    MIXAMO_OT_ExportFBX,
-    MIXAMO_OT_ExportFBX_ArmatureOnly,
-    MIXAMO_OT_DisabledFeature,
+    CROSSRIG_OT_SelectArmatureFromList,
+    CROSSRIG_OT_GetActions,
+    CROSSRIG_OT_MoveActionUp,
+    CROSSRIG_OT_MoveActionDown,
+    CROSSRIG_OT_ConfirmOrder,
+    CROSSRIG_OT_SendToTimeline,
+    CROSSRIG_OT_BakeAction,
+    CROSSRIG_OT_StabilizeRoot,
+    CROSSRIG_OT_ExportFBX,
+    CROSSRIG_OT_ExportFBX_ArmatureOnly,
+    CROSSRIG_OT_DisabledFeature,
 )
 
 

@@ -663,18 +663,18 @@ class CROSSRIG_OT_OpenBoneMappingFolder(Operator):
 
 # Classes to register
 classes = (
-    MIXAMO_OT_CreateBoneMapping,
-    MIXAMO_OT_AutoMapBones,
-    MIXAMO_OT_SaveBoneMapping,
-    MIXAMO_OT_LoadBoneMapping,
-    MIXAMO_OT_LoadBoneMappingMenu,
-    MIXAMO_OT_DeleteBoneMapping,
-    MIXAMO_OT_ClearBoneMappings,
-    MIXAMO_OT_AddBoneMapping,
-    MIXAMO_OT_RemoveBoneMapping,
-    MIXAMO_OT_ApplyAnimationWithMapping,
-    MIXAMO_OT_ValidateBoneMapping,
-    MIXAMO_OT_OpenBoneMappingFolder,
+    CROSSRIG_OT_CreateBoneMapping,
+    CROSSRIG_OT_AutoMapBones,
+    CROSSRIG_OT_SaveBoneMapping,
+    CROSSRIG_OT_LoadBoneMapping,
+    CROSSRIG_OT_LoadBoneMappingMenu,
+    CROSSRIG_OT_DeleteBoneMapping,
+    CROSSRIG_OT_ClearBoneMappings,
+    CROSSRIG_OT_AddBoneMapping,
+    CROSSRIG_OT_RemoveBoneMapping,
+    CROSSRIG_OT_ApplyAnimationWithMapping,
+    CROSSRIG_OT_ValidateBoneMapping,
+    CROSSRIG_OT_OpenBoneMappingFolder,
 )
 
 

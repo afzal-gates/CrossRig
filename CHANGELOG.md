@@ -1,9 +1,22 @@
 # Changelog
 
-All notable changes to Mixanimo Lite will be documented in this file.
+All notable changes to CrossRig will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.1] - 2025-10-29
+
+### Fixed
+- **Registration Error**: Fixed `RuntimeError: name 'MIXAMO_OT_SelectArmatureFromList' is not defined`
+  - Updated all operator class references in registration tuples from `MIXAMO_OT_*` to `CROSSRIG_OT_*`
+  - Fixed files: `operators.py`, `bone_mapping_operators.py`, `animation_transfer_operators.py`, `armature_template_operators.py`, `preset_operators.py`
+  - Addon now registers correctly in Blender 4.5 without errors
+
+### Changed
+- Updated packaging scripts to use version 1.0.1
+- Updated addon name from "Mixanimo Lite" to "CrossRig" in packaging system
+- Release folder now stores versioned addon zips automatically
 
 ## [1.2.0] - 2025-10-28
 

@@ -1,20 +1,27 @@
 @echo off
 REM ================================================================
-REM Mixanimo Lite - Addon Packaging Script
+REM CrossRig - Addon Packaging Script
 REM Creates a Blender-installable zip file
 REM ================================================================
 
 echo.
 echo ========================================
-echo  Mixanimo Lite - Addon Packager
+echo  CrossRig - Addon Packager
 echo ========================================
 echo.
 
 REM Set variables
-set ADDON_NAME=Mixanimo_Lite
-set VERSION=1.3.0
-set OUTPUT_ZIP=%ADDON_NAME%_v%VERSION%.zip
+set ADDON_NAME=CrossRig
+set VERSION=1.0.1
+set RELEASE_DIR=release
+set OUTPUT_ZIP=%RELEASE_DIR%\%ADDON_NAME%_v%VERSION%.zip
 set TEMP_DIR=%ADDON_NAME%_temp
+
+REM Create release directory if it doesn't exist
+if not exist "%RELEASE_DIR%" (
+    echo Creating release directory...
+    mkdir "%RELEASE_DIR%"
+)
 
 REM Clean up previous builds
 if exist "%OUTPUT_ZIP%" (
@@ -97,14 +104,14 @@ echo ========================================
 echo.
 echo Addon packaged successfully:
 echo   File: %OUTPUT_ZIP%
-echo   Location: %CD%
+echo   Location: %CD%\%RELEASE_DIR%
 echo.
 echo Installation Instructions:
 echo   1. Open Blender
 echo   2. Go to Edit ^> Preferences ^> Add-ons
 echo   3. Click "Install..."
 echo   4. Select %OUTPUT_ZIP%
-echo   5. Enable "Mixanimo Lite"
+echo   5. Enable "CrossRig"
 echo.
 echo ========================================
 echo.

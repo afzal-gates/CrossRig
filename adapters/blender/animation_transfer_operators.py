@@ -316,11 +316,11 @@ class CROSSRIG_OT_OpenAnimationDataFolder(Operator):
 
 # Registration
 classes = (
-    MIXAMO_OT_SaveAnimationData,
-    MIXAMO_OT_ApplyAnimationData,
-    MIXAMO_OT_ApplyAnimationDataMenu,
-    MIXAMO_OT_DeleteAnimationData,
-    MIXAMO_OT_OpenAnimationDataFolder,
+    CROSSRIG_OT_SaveAnimationData,
+    CROSSRIG_OT_ApplyAnimationData,
+    CROSSRIG_OT_ApplyAnimationDataMenu,
+    CROSSRIG_OT_DeleteAnimationData,
+    CROSSRIG_OT_OpenAnimationDataFolder,
 )
 
 

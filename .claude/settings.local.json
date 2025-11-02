@@ -12,7 +12,12 @@
       "Bash(gh --version:*)",
       "Bash(git init:*)",
       "Bash(git branch:*)",
-      "Bash(git remote add:*)"
+      "Bash(git remote add:*)",
+      "Bash(if not exist \"release\" mkdir release)",
+      "Bash(powershell -Command:*)",
+      "Bash(cmd /c create_addon_zip.bat)",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"create_addon_zip.ps1\")",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"E:\\AddOns\\Customized Addons\\CrossRig\\CrossRig\\create_addon_zip.ps1\")"
     ],
     "deny": [],
     "ask": []

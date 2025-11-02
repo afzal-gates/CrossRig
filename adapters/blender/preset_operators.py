@@ -263,11 +263,11 @@ class CROSSRIG_OT_OpenPresetFolder(Operator):
 
 # Classes to register
 classes = (
-    MIXAMO_OT_SavePreset,
-    MIXAMO_OT_LoadPreset,
-    MIXAMO_OT_LoadPresetMenu,
-    MIXAMO_OT_DeletePreset,
-    MIXAMO_OT_OpenPresetFolder,
+    CROSSRIG_OT_SavePreset,
+    CROSSRIG_OT_LoadPreset,
+    CROSSRIG_OT_LoadPresetMenu,
+    CROSSRIG_OT_DeletePreset,
+    CROSSRIG_OT_OpenPresetFolder,
 )
 
 

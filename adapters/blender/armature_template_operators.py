@@ -475,12 +475,12 @@ class CROSSRIG_OT_OpenArmatureTemplateFolder(Operator):
 
 # Registration
 classes = (
-    MIXAMO_OT_SaveArmatureTemplate,
-    MIXAMO_OT_LoadArmatureTemplate,
-    MIXAMO_OT_LoadArmatureTemplateMenu,
-    MIXAMO_OT_LoadArmatureTemplateToMesh,
-    MIXAMO_OT_DeleteArmatureTemplate,
-    MIXAMO_OT_OpenArmatureTemplateFolder,
+    CROSSRIG_OT_SaveArmatureTemplate,
+    CROSSRIG_OT_LoadArmatureTemplate,
+    CROSSRIG_OT_LoadArmatureTemplateMenu,
+    CROSSRIG_OT_LoadArmatureTemplateToMesh,
+    CROSSRIG_OT_DeleteArmatureTemplate,
+    CROSSRIG_OT_OpenArmatureTemplateFolder,
 )
 
 

@@ -1,19 +1,26 @@
 # ================================================================
-# Mixanimo Lite - Addon Packaging Script (PowerShell)
+# CrossRig - Addon Packaging Script (PowerShell)
 # Creates a Blender-installable zip file
 # ================================================================
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host " Mixanimo Lite - Addon Packager" -ForegroundColor Cyan
+Write-Host " CrossRig - Addon Packager" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Set variables
-$AddonName = "Mixanimo_Lite"
-$Version = "1.0.0"
-$OutputZip = "${AddonName}_v${Version}.zip"
+$AddonName = "CrossRig"
+$Version = "1.0.1"
+$ReleaseDir = "release"
+$OutputZip = "${ReleaseDir}\${AddonName}_v${Version}.zip"
 $TempDir = "${AddonName}_temp"
+
+# Create release directory if it doesn't exist
+if (-not (Test-Path $ReleaseDir)) {
+    Write-Host "Creating release directory..." -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $ReleaseDir -Force | Out-Null
+}
 
 # Clean up previous builds
 if (Test-Path $OutputZip) {
@@ -40,6 +47,22 @@ try {
 } catch {
     Write-Host "  [ERROR] Failed to copy __init__.py" -ForegroundColor Red
     exit 1
+}
+
+# Copy directory structure (config, core, adapters)
+if (Test-Path "config") {
+    Copy-Item -Recurse "config" "$TempDir\$AddonName\"
+    Write-Host "  [OK] config/" -ForegroundColor Green
+}
+
+if (Test-Path "core") {
+    Copy-Item -Recurse "core" "$TempDir\$AddonName\"
+    Write-Host "  [OK] core/" -ForegroundColor Green
+}
+
+if (Test-Path "adapters") {
+    Copy-Item -Recurse "adapters" "$TempDir\$AddonName\"
+    Write-Host "  [OK] adapters/" -ForegroundColor Green
 }
 
 # Copy optional documentation files
@@ -83,7 +106,7 @@ Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "Addon packaged successfully:" -ForegroundColor White
 Write-Host "  File: $OutputZip" -ForegroundColor Cyan
-Write-Host "  Location: $PWD" -ForegroundColor Cyan
+Write-Host "  Location: $PWD\$ReleaseDir" -ForegroundColor Cyan
 
 # Get file info
 $FileInfo = Get-Item $OutputZip
@@ -96,7 +119,7 @@ Write-Host "  1. Open Blender" -ForegroundColor White
 Write-Host "  2. Go to Edit > Preferences > Add-ons" -ForegroundColor White
 Write-Host "  3. Click 'Install...'" -ForegroundColor White
 Write-Host "  4. Select $OutputZip" -ForegroundColor White
-Write-Host "  5. Enable 'Mixanimo Lite'" -ForegroundColor White
+Write-Host "  5. Enable 'CrossRig'" -ForegroundColor White
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
