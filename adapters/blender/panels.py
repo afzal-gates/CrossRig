@@ -337,6 +337,9 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                 if not prefs.smart_rig_active:
                     # Not in smart rig mode - show start button
                     row = sub_box.row()
+                    row.prop(prefs, "smart_rig_bone_set", text="Bone Set")
+
+                    row = sub_box.row()
                     row.operator("crossrig.start_smart_rig_mode", text="Start Smart Rig Mode", icon='PLAY')
                     row = sub_box.row()
                     row.label(text="Select mesh and click Start", icon='INFO')
@@ -345,6 +348,10 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                     row = sub_box.row()
                     row.label(text=f"Target: {prefs.smart_rig_target_mesh.name}", icon='MESH_DATA')
 
+                    # Show bone set and allow changing
+                    row = sub_box.row()
+                    row.prop(prefs, "smart_rig_bone_set", text="Mode")
+
                     # Landmark count
                     landmark_count = len(prefs.smart_rig_landmarks)
                     row = sub_box.row()
@@ -352,7 +359,45 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
 
                     # Quick landmark buttons
                     inner_box = sub_box.box()
-                    inner_box.label(text="Pick Landmarks (Select vertex in Edit mode)", icon='VERTEXSEL')
+
+                    # Show mode-specific instructions
+                    if prefs.smart_rig_bone_set == 'SMART':
+                        inner_box.label(text="SMART MODE: Pick 6 landmarks", icon='INFO')
+                        inner_box.label(text="(Tab to Edit Mode → Select vertex → Tab to Object Mode → Click button)")
+
+                        # Show only required landmarks for SMART mode
+                        flow = inner_box.grid_flow(row_major=True, columns=1, align=True)
+
+                        op = flow.operator("crossrig.pick_landmark", text="1. Neck (Center)")
+                        op.landmark_id = "neck"
+                        op.landmark_side = 'CENTER'
+
+                        op = flow.operator("crossrig.pick_landmark", text="2. Chin (Center)")
+                        op.landmark_id = "chin"
+                        op.landmark_side = 'CENTER'
+
+                        op = flow.operator("crossrig.pick_landmark", text="3. Hip (Center)")
+                        op.landmark_id = "spine_bottom"
+                        op.landmark_side = 'CENTER'
+
+                        op = flow.operator("crossrig.pick_landmark", text="4. Left Shoulder")
+                        op.landmark_id = "shoulder"
+                        op.landmark_side = 'LEFT'
+
+                        op = flow.operator("crossrig.pick_landmark", text="5. Left Wrist")
+                        op.landmark_id = "wrist"
+                        op.landmark_side = 'LEFT'
+
+                        op = flow.operator("crossrig.pick_landmark", text="6. Left Ankle")
+                        op.landmark_id = "ankle"
+                        op.landmark_side = 'LEFT'
+
+                        # Auto-mirror button
+                        row = inner_box.row()
+                        row.operator("crossrig.auto_detect_symmetry", text="Auto-Mirror to Right Side", icon='MOD_MIRROR')
+
+                    else:
+                        inner_box.label(text="Pick Landmarks (Select vertex in Edit mode)", icon='VERTEXSEL')
 
                     # Head/Neck landmarks
                     flow = inner_box.grid_flow(row_major=True, columns=2, align=True)

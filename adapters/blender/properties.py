@@ -291,6 +291,17 @@ class CrossRigSettings(PropertyGroup):
         name="Smart Rig Landmarks"
     )
 
+    smart_rig_bone_set: EnumProperty(
+        name="Bone Set",
+        description="Predefined bone set presets",
+        items=[
+            ('SMART', 'Smart (Auto-Rig Pro)', 'Minimal landmarks with auto-interpolation (6 picks: Neck, Chin, Hip, L Shoulder, L Wrist, L Ankle)'),
+            ('MINIMAL', 'Minimal', 'Basic skeleton (8 landmarks)'),
+            ('STANDARD', 'Standard', 'Complete humanoid rig (15-20 landmarks)'),
+        ],
+        default='SMART'
+    )
+
     show_smart_rig: BoolProperty(
         name="Smart Rig",
         description="Show/Hide Smart Rig subsection",

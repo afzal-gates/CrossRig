@@ -39,6 +39,47 @@ LANDMARK_DEFINITIONS = [
     ('toe', 'Toe', 'LEG', True),
 ]
 
+# Bone Set Presets (Auto-Rig Pro style)
+BONE_SET_PRESETS = {
+    'SMART': {
+        'name': 'Smart (Auto-Rig Pro)',
+        'description': 'Minimal landmarks with intelligent interpolation (6 picks)',
+        'required': [
+            ('neck', 'CENTER'),
+            ('chin', 'CENTER'),
+            ('spine_bottom', 'CENTER'),  # Hip
+            ('shoulder', 'LEFT'),
+            ('wrist', 'LEFT'),
+            ('ankle', 'LEFT'),
+        ],
+        'auto_mirror': True,
+        'interpolate': True,
+    },
+    'MINIMAL': {
+        'name': 'Minimal',
+        'description': 'Basic skeleton (8-10 landmarks)',
+        'required': [
+            ('neck', 'CENTER'),
+            ('spine_bottom', 'CENTER'),
+            ('shoulder', 'LEFT'),
+            ('elbow', 'LEFT'),
+            ('wrist', 'LEFT'),
+            ('hip', 'LEFT'),
+            ('knee', 'LEFT'),
+            ('ankle', 'LEFT'),
+        ],
+        'auto_mirror': True,
+        'interpolate': True,
+    },
+    'STANDARD': {
+        'name': 'Standard',
+        'description': 'Complete humanoid rig (15-20 landmarks)',
+        'required': [],
+        'auto_mirror': False,
+        'interpolate': False,
+    },
+}
+
 
 class CROSSRIG_OT_StartSmartRigMode(Operator):
     """Enter Smart Rig landmark selection mode"""
@@ -333,6 +374,42 @@ class CROSSRIG_OT_GenerateSmartRig(Operator):
             return {'CANCELLED'}
 
 
+class CROSSRIG_OT_ApplyBoneSetPreset(Operator):
+    """Apply bone set preset - shows which landmarks to pick"""
+    bl_idname = "crossrig.apply_bone_set_preset"
+    bl_label = "Apply Bone Set"
+    bl_description = "Apply selected bone set preset and show required landmarks"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        settings = context.scene.crossrig_settings
+        bone_set = settings.smart_rig_bone_set
+
+        if bone_set not in BONE_SET_PRESETS:
+            self.report({'ERROR'}, f"Unknown bone set: {bone_set}")
+            return {'CANCELLED'}
+
+        preset = BONE_SET_PRESETS[bone_set]
+
+        # Clear existing landmarks
+        settings.smart_rig_landmarks.clear()
+
+        # Clean up visual markers
+        for obj in bpy.data.objects:
+            if obj.name.startswith("Landmark_"):
+                bpy.data.objects.remove(obj, do_unlink=True)
+
+        preset_name = preset['name']
+        required_count = len(preset.get('required', []))
+
+        if required_count > 0:
+            self.report({'INFO'}, f"Applied '{preset_name}' - Pick {required_count} landmarks")
+        else:
+            self.report({'INFO'}, f"Applied '{preset_name}' - Pick any landmarks")
+
+        return {'FINISHED'}
+
+
 class CROSSRIG_OT_ExitSmartRigMode(Operator):
     """Exit Smart Rig mode without generating"""
     bl_idname = "crossrig.exit_smart_rig_mode"
@@ -363,6 +440,7 @@ classes = (
     CROSSRIG_OT_ClearLandmark,
     CROSSRIG_OT_ClearAllLandmarks,
     CROSSRIG_OT_AutoDetectSymmetry,
+    CROSSRIG_OT_ApplyBoneSetPreset,
     CROSSRIG_OT_GenerateSmartRig,
     CROSSRIG_OT_ExitSmartRigMode,
 )

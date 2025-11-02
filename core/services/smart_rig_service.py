@@ -49,6 +49,93 @@ def get_landmark_position(landmarks, landmark_id, side='CENTER'):
     return None
 
 
+def interpolate_landmark(landmarks, landmark_id, side='CENTER'):
+    """
+    Intelligently interpolate missing landmarks based on available ones.
+
+    This mimics Auto-Rig Pro's Smart mode by calculating reasonable
+    positions for missing bones.
+    """
+    # Try to get existing landmark first
+    existing = get_landmark_position(landmarks, landmark_id, side)
+    if existing:
+        return existing
+
+    # Interpolation rules for common landmarks
+    if landmark_id == 'head_top':
+        neck = get_landmark_position(landmarks, 'neck', 'CENTER')
+        chin = get_landmark_position(landmarks, 'chin', 'CENTER')
+        if neck and chin:
+            # Head top is above neck, opposite direction from chin
+            neck_to_chin = chin - neck
+            return neck - neck_to_chin * 0.8
+
+    elif landmark_id == 'spine_top':
+        neck = get_landmark_position(landmarks, 'neck', 'CENTER')
+        spine_bottom = get_landmark_position(landmarks, 'spine_bottom', 'CENTER')
+        if neck and spine_bottom:
+            # Spine top is 80% of the way from hips to neck
+            return spine_bottom.lerp(neck, 0.8)
+
+    elif landmark_id == 'spine_mid':
+        neck = get_landmark_position(landmarks, 'neck', 'CENTER')
+        spine_bottom = get_landmark_position(landmarks, 'spine_bottom', 'CENTER')
+        if neck and spine_bottom:
+            # Spine mid is halfway between hips and neck
+            return spine_bottom.lerp(neck, 0.5)
+
+    elif landmark_id == 'elbow':
+        shoulder = get_landmark_position(landmarks, 'shoulder', side)
+        wrist = get_landmark_position(landmarks, 'wrist', side)
+        if shoulder and wrist:
+            # Elbow is roughly halfway between shoulder and wrist
+            return shoulder.lerp(wrist, 0.5)
+
+    elif landmark_id == 'hand':
+        wrist = get_landmark_position(landmarks, 'wrist', side)
+        elbow = get_landmark_position(landmarks, 'elbow', side)
+        if wrist and elbow:
+            # Hand extends from wrist in same direction
+            wrist_to_elbow = elbow - wrist
+            return wrist - wrist_to_elbow * 0.3
+
+    elif landmark_id == 'hip':
+        spine_bottom = get_landmark_position(landmarks, 'spine_bottom', 'CENTER')
+        if spine_bottom:
+            # Hips are offset from spine bottom
+            offset_x = 0.15 if side == 'LEFT' else -0.15
+            return spine_bottom + Vector((offset_x, 0, -0.1))
+
+    elif landmark_id == 'knee':
+        hip = get_landmark_position(landmarks, 'hip', side)
+        ankle = get_landmark_position(landmarks, 'ankle', side)
+        if hip and ankle:
+            # Knee is roughly halfway between hip and ankle
+            return hip.lerp(ankle, 0.5)
+        elif hip:
+            # Estimate knee below hip
+            return hip + Vector((0, 0, -0.5))
+
+    elif landmark_id == 'foot':
+        ankle = get_landmark_position(landmarks, 'ankle', side)
+        knee = get_landmark_position(landmarks, 'knee', side)
+        if ankle and knee:
+            # Foot extends forward from ankle
+            return ankle + Vector((0, 0.2, -0.05))
+        elif ankle:
+            return ankle + Vector((0, 0.2, -0.05))
+
+    elif landmark_id == 'toe':
+        foot = get_landmark_position(landmarks, 'foot', side)
+        ankle = get_landmark_position(landmarks, 'ankle', side)
+        if foot:
+            return foot + Vector((0, 0.1, 0))
+        elif ankle:
+            return ankle + Vector((0, 0.3, -0.05))
+
+    return None
+
+
 def calculate_bone_roll(bone_vector, up_vector=Vector((0, 0, 1))):
     """Calculate bone roll to align with up vector."""
     # This is a simplified roll calculation
@@ -120,12 +207,12 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
     edit_bones = armature_obj.data.edit_bones
     created_bones = {}
 
-    # === Create Spine Chain ===
-    spine_bottom = get_landmark_position(landmarks, 'spine_bottom', 'CENTER')
-    spine_mid = get_landmark_position(landmarks, 'spine_mid', 'CENTER')
-    spine_top = get_landmark_position(landmarks, 'spine_top', 'CENTER')
-    neck = get_landmark_position(landmarks, 'neck', 'CENTER')
-    head_top = get_landmark_position(landmarks, 'head_top', 'CENTER')
+    # === Create Spine Chain (with interpolation) ===
+    spine_bottom = interpolate_landmark(landmarks, 'spine_bottom', 'CENTER')
+    spine_mid = interpolate_landmark(landmarks, 'spine_mid', 'CENTER')
+    spine_top = interpolate_landmark(landmarks, 'spine_top', 'CENTER')
+    neck = interpolate_landmark(landmarks, 'neck', 'CENTER')
+    head_top = interpolate_landmark(landmarks, 'head_top', 'CENTER')
 
     # Root bone (hips)
     if spine_bottom:
@@ -174,14 +261,14 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
             )
             created_bones['head'] = head_bone
 
-    # === Create Arms ===
+    # === Create Arms (with interpolation) ===
     shoulder_attach = spine_top if spine_top else (spine_mid if spine_mid else spine_bottom)
 
     for side in ['LEFT', 'RIGHT']:
-        shoulder = get_landmark_position(landmarks, 'shoulder', side)
-        elbow = get_landmark_position(landmarks, 'elbow', side)
-        wrist = get_landmark_position(landmarks, 'wrist', side)
-        hand = get_landmark_position(landmarks, 'hand', side)
+        shoulder = interpolate_landmark(landmarks, 'shoulder', side)
+        elbow = interpolate_landmark(landmarks, 'elbow', side)
+        wrist = interpolate_landmark(landmarks, 'wrist', side)
+        hand = interpolate_landmark(landmarks, 'hand', side)
 
         if not shoulder:
             continue
@@ -223,15 +310,15 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
                     )
                     created_bones[f'hand{side_suffix}'] = hand_bone
 
-    # === Create Legs ===
-    hip_attach = spine_bottom if spine_bottom else get_landmark_position(landmarks, 'spine_mid', 'CENTER')
+    # === Create Legs (with interpolation) ===
+    hip_attach = spine_bottom if spine_bottom else interpolate_landmark(landmarks, 'spine_mid', 'CENTER')
 
     for side in ['LEFT', 'RIGHT']:
-        hip = get_landmark_position(landmarks, 'hip', side)
-        knee = get_landmark_position(landmarks, 'knee', side)
-        ankle = get_landmark_position(landmarks, 'ankle', side)
-        foot = get_landmark_position(landmarks, 'foot', side)
-        toe = get_landmark_position(landmarks, 'toe', side)
+        hip = interpolate_landmark(landmarks, 'hip', side)
+        knee = interpolate_landmark(landmarks, 'knee', side)
+        ankle = interpolate_landmark(landmarks, 'ankle', side)
+        foot = interpolate_landmark(landmarks, 'foot', side)
+        toe = interpolate_landmark(landmarks, 'toe', side)
 
         if not hip:
             continue
