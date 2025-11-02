@@ -13,6 +13,7 @@ from bpy.props import (
     BoolProperty,
     EnumProperty,
     FloatProperty,
+    FloatVectorProperty,
     PointerProperty
 )
 from ...config.constants import (
