@@ -173,6 +173,10 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
     """
     Generate an armature from user-selected landmarks.
 
+    Smart Mode: Generates complete body skeleton from minimal landmarks.
+    - 6 picks generates: spine (3), neck, head, arms (8), legs (10) = 23 bones
+    - Automatically calculates all intermediate bones
+
     Args:
         landmarks: Collection of SmartRigLandmark property groups
         mesh_obj: Target mesh object
@@ -182,8 +186,8 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
     Returns:
         (success, message, armature_obj)
     """
-    if len(landmarks) < 3:
-        return False, "Need at least 3 landmarks to generate rig", None
+    if len(landmarks) < 1:
+        return False, "Need at least 1 landmark to generate rig", None
 
     # Create landmark position dictionary
     landmark_dict = {}
@@ -261,48 +265,47 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
             )
             created_bones['head'] = head_bone
 
-    # === Create Arms (with interpolation) ===
+    # === Create Arms (ALWAYS generate all arm bones) ===
     shoulder_attach = spine_top if spine_top else (spine_mid if spine_mid else spine_bottom)
 
     for side in ['LEFT', 'RIGHT']:
+        # Force interpolation - ALWAYS create all bones
         shoulder = interpolate_landmark(landmarks, 'shoulder', side)
         elbow = interpolate_landmark(landmarks, 'elbow', side)
         wrist = interpolate_landmark(landmarks, 'wrist', side)
         hand = interpolate_landmark(landmarks, 'hand', side)
 
+        # Skip only if we can't even interpolate shoulder
         if not shoulder:
             continue
 
         side_suffix = '.L' if side == 'LEFT' else '.R'
         arm_parent = created_bones.get('spine_03', created_bones.get('root'))
 
-        # Shoulder bone
-        shoulder_tail = elbow if elbow else (wrist if wrist else shoulder + Vector((0, 0, -0.2)))
+        # Shoulder bone (always create)
         shoulder_bone = create_bone_chain(
             edit_bones, f'shoulder{side_suffix}',
             shoulder_attach, shoulder, arm_parent
         )
         created_bones[f'shoulder{side_suffix}'] = shoulder_bone
 
-        # Upper arm
+        # Upper arm (always create if elbow exists or can be interpolated)
         if elbow:
             upper_arm = create_bone_chain(
                 edit_bones, f'upper_arm{side_suffix}',
                 shoulder, elbow, shoulder_bone
             )
             created_bones[f'upper_arm{side_suffix}'] = upper_arm
-            current_parent = upper_arm
 
-            # Forearm
+            # Forearm (always create if wrist exists or can be interpolated)
             if wrist:
                 forearm = create_bone_chain(
                     edit_bones, f'forearm{side_suffix}',
                     elbow, wrist, upper_arm
                 )
                 created_bones[f'forearm{side_suffix}'] = forearm
-                current_parent = forearm
 
-                # Hand
+                # Hand (always create if it exists or can be interpolated)
                 if hand:
                     hand_bone = create_bone_chain(
                         edit_bones, f'hand{side_suffix}',
@@ -310,50 +313,49 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
                     )
                     created_bones[f'hand{side_suffix}'] = hand_bone
 
-    # === Create Legs (with interpolation) ===
+    # === Create Legs (ALWAYS generate all leg bones) ===
     hip_attach = spine_bottom if spine_bottom else interpolate_landmark(landmarks, 'spine_mid', 'CENTER')
 
     for side in ['LEFT', 'RIGHT']:
+        # Force interpolation - ALWAYS create all bones
         hip = interpolate_landmark(landmarks, 'hip', side)
         knee = interpolate_landmark(landmarks, 'knee', side)
         ankle = interpolate_landmark(landmarks, 'ankle', side)
         foot = interpolate_landmark(landmarks, 'foot', side)
         toe = interpolate_landmark(landmarks, 'toe', side)
 
+        # Skip only if we can't even interpolate hip
         if not hip:
             continue
 
         side_suffix = '.L' if side == 'LEFT' else '.R'
         leg_parent = created_bones.get('root')
 
-        # Thigh
+        # Thigh (always create if knee exists or can be interpolated)
         if knee:
             thigh = create_bone_chain(
                 edit_bones, f'thigh{side_suffix}',
                 hip, knee, leg_parent
             )
             created_bones[f'thigh{side_suffix}'] = thigh
-            current_parent = thigh
 
-            # Shin
+            # Shin (always create if ankle exists or can be interpolated)
             if ankle:
                 shin = create_bone_chain(
                     edit_bones, f'shin{side_suffix}',
                     knee, ankle, thigh
                 )
                 created_bones[f'shin{side_suffix}'] = shin
-                current_parent = shin
 
-                # Foot
+                # Foot (always create if it exists or can be interpolated)
                 if foot:
                     foot_bone = create_bone_chain(
                         edit_bones, f'foot{side_suffix}',
                         ankle, foot, shin
                     )
                     created_bones[f'foot{side_suffix}'] = foot_bone
-                    current_parent = foot_bone
 
-                    # Toe
+                    # Toe (always create if it exists or can be interpolated)
                     if toe:
                         toe_bone = create_bone_chain(
                             edit_bones, f'toe{side_suffix}',

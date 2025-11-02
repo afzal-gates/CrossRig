@@ -389,24 +389,49 @@ class CROSSRIG_OT_GenerateSmartRig(Operator):
         settings = context.scene.crossrig_settings
 
         landmark_count = len(settings.smart_rig_landmarks)
-        layout.label(text=f"Landmarks: {landmark_count}", icon='INFO')
+        bone_set = settings.smart_rig_bone_set
 
-        if landmark_count < 3:
-            layout.label(text="Warning: Need at least 3 landmarks", icon='ERROR')
+        layout.label(text=f"Landmarks Picked: {landmark_count}", icon='INFO')
 
+        # Show what will be generated
+        box = layout.box()
+        box.label(text="Will Generate:", icon='ARMATURE_DATA')
+
+        if bone_set == 'SMART':
+            box.label(text="• Complete body skeleton (23 bones)", icon='DOT')
+            box.label(text="• Spine chain (root + 3 vertebrae)", icon='DOT')
+            box.label(text="• Neck + Head", icon='DOT')
+            box.label(text="• Arms (shoulder → elbow → wrist → hand) x2", icon='DOT')
+            box.label(text="• Legs (hip → knee → ankle → foot → toe) x2", icon='DOT')
+            layout.separator()
+            layout.label(text="All bones auto-calculated from your 6 picks!", icon='INFO')
+        else:
+            box.label(text=f"• Bones based on picked landmarks", icon='DOT')
+
+        layout.separator()
         layout.prop(self, "auto_skin")
 
     def execute(self, context):
         settings = context.scene.crossrig_settings
         mesh_obj = settings.smart_rig_target_mesh
+        bone_set = settings.smart_rig_bone_set
 
         if not mesh_obj:
             self.report({'ERROR'}, "No target mesh set")
             return {'CANCELLED'}
 
-        if len(settings.smart_rig_landmarks) < 3:
-            self.report({'ERROR'}, "Need at least 3 landmarks to generate rig")
-            return {'CANCELLED'}
+        # Different requirements for different modes
+        landmark_count = len(settings.smart_rig_landmarks)
+        if bone_set == 'SMART':
+            # Smart mode can work with fewer landmarks due to interpolation
+            if landmark_count < 1:
+                self.report({'ERROR'}, "Smart mode: Pick at least 1 landmark")
+                return {'CANCELLED'}
+        else:
+            # Other modes need at least 3 landmarks
+            if landmark_count < 3:
+                self.report({'ERROR'}, "Need at least 3 landmarks to generate rig")
+                return {'CANCELLED'}
 
         # Call the rig generation service
         from ...core.services.smart_rig_service import generate_armature_from_landmarks
