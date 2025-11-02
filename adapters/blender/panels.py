@@ -363,7 +363,7 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                     # Show mode-specific instructions
                     if prefs.smart_rig_bone_set == 'SMART':
                         inner_box.label(text="SMART MODE: Pick 6 landmarks", icon='INFO')
-                        inner_box.label(text="(Tab to Edit Mode → Select vertex → Tab to Object Mode → Click button)")
+                        inner_box.label(text="Click button → Click on mesh surface", icon='HAND')
 
                         # Show only required landmarks for SMART mode
                         flow = inner_box.grid_flow(row_major=True, columns=1, align=True)
@@ -397,7 +397,7 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                         row.operator("crossrig.auto_detect_symmetry", text="Auto-Mirror to Right Side", icon='MOD_MIRROR')
 
                     else:
-                        inner_box.label(text="Pick Landmarks (Select vertex in Edit mode)", icon='VERTEXSEL')
+                        inner_box.label(text="Pick Landmarks (Click button → Click mesh)", icon='HAND')
 
                     # Head/Neck landmarks
                     flow = inner_box.grid_flow(row_major=True, columns=2, align=True)

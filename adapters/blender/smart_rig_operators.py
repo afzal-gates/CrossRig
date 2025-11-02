@@ -113,10 +113,10 @@ class CROSSRIG_OT_StartSmartRigMode(Operator):
 
 
 class CROSSRIG_OT_PickLandmark(Operator):
-    """Pick a vertex as a landmark on the mesh"""
+    """Click on mesh surface to pick landmark (works in Object Mode)"""
     bl_idname = "crossrig.pick_landmark"
     bl_label = "Pick Landmark"
-    bl_description = "Click a vertex on the mesh to set as landmark"
+    bl_description = "Click anywhere on the mesh surface to set landmark"
     bl_options = {'REGISTER', 'UNDO'}
 
     landmark_id: StringProperty()
@@ -130,64 +130,125 @@ class CROSSRIG_OT_PickLandmark(Operator):
         default='CENTER'
     )
 
-    def execute(self, context):
+    def modal(self, context, event):
+        context.area.tag_redraw()
+
+        if event.type in {'RIGHTMOUSE', 'ESC'}:
+            context.window.cursor_modal_restore()
+            return {'CANCELLED'}
+
+        if event.type == 'LEFTMOUSE' and event.value == 'PRESS':
+            # Perform raycast to get hit position on mesh
+            mesh_obj = context.scene.crossrig_settings.smart_rig_target_mesh
+
+            if not mesh_obj:
+                self.report({'ERROR'}, "No target mesh")
+                context.window.cursor_modal_restore()
+                return {'CANCELLED'}
+
+            # Get mouse position
+            region = context.region
+            rv3d = context.region_data
+            coord = event.mouse_region_x, event.mouse_region_y
+
+            # Raycast from view
+            view_vector = bpy.context.space_data.region_3d.view_rotation @ Vector((0, 0, -1))
+            ray_origin = bpy.context.space_data.region_3d.view_location
+
+            # Use view3d_utils for accurate raycasting
+            from bpy_extras import view3d_utils
+
+            # Get ray origin and direction
+            ray_origin = view3d_utils.region_2d_to_origin_3d(region, rv3d, coord)
+            ray_direction = view3d_utils.region_2d_to_vector_3d(region, rv3d, coord)
+
+            # Perform raycast
+            ray_target = ray_origin + ray_direction * 1000
+
+            # Convert to object space
+            matrix_inv = mesh_obj.matrix_world.inverted()
+            ray_origin_obj = matrix_inv @ ray_origin
+            ray_target_obj = matrix_inv @ ray_target
+            ray_direction_obj = ray_target_obj - ray_origin_obj
+
+            # Raycast on mesh
+            result, location, normal, index = mesh_obj.ray_cast(ray_origin_obj, ray_direction_obj)
+
+            if result:
+                # Convert back to world space
+                world_pos = mesh_obj.matrix_world @ location
+
+                # Store landmark
+                settings = context.scene.crossrig_settings
+
+                # Check if landmark already exists and update it
+                existing = None
+                for lm in settings.smart_rig_landmarks:
+                    if lm.landmark_id == self.landmark_id and lm.landmark_side == self.landmark_side:
+                        existing = lm
+                        break
+
+                if existing:
+                    existing.position = world_pos
+                else:
+                    landmark = settings.smart_rig_landmarks.add()
+                    landmark.landmark_id = self.landmark_id
+                    landmark.landmark_side = self.landmark_side
+                    landmark.position = world_pos
+
+                # Create or update visual marker
+                marker_name = f"Landmark_{self.landmark_id}_{self.landmark_side}"
+                if marker_name in bpy.data.objects:
+                    marker = bpy.data.objects[marker_name]
+                    marker.location = world_pos
+                else:
+                    bpy.ops.object.empty_add(type='SPHERE', location=world_pos)
+                    marker = context.active_object
+                    marker.name = marker_name
+                    marker.empty_display_size = 0.05
+                    marker.show_in_front = True
+
+                    # Set color based on side
+                    if self.landmark_side == 'LEFT':
+                        marker.color = (1.0, 0.0, 0.0, 1.0)  # Red
+                    elif self.landmark_side == 'RIGHT':
+                        marker.color = (0.0, 0.0, 1.0, 1.0)  # Blue
+                    else:
+                        marker.color = (0.0, 1.0, 0.0, 1.0)  # Green
+
+                # Restore mesh selection
+                mesh_obj.select_set(True)
+                context.view_layer.objects.active = mesh_obj
+
+                landmark_name = f"{self.landmark_id} ({self.landmark_side})"
+                self.report({'INFO'}, f"✓ {landmark_name}")
+
+                context.window.cursor_modal_restore()
+                return {'FINISHED'}
+            else:
+                self.report({'WARNING'}, "Click on the mesh surface")
+
+        return {'RUNNING_MODAL'}
+
+    def invoke(self, context, event):
         mesh_obj = context.scene.crossrig_settings.smart_rig_target_mesh
 
         if not mesh_obj:
             self.report({'ERROR'}, "No target mesh set")
             return {'CANCELLED'}
 
-        # Get selected vertex
-        bpy.ops.object.mode_set(mode='OBJECT')
-        selected_verts = [v for v in mesh_obj.data.vertices if v.select]
+        # Make sure we're in object mode
+        if context.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
 
-        if not selected_verts:
-            self.report({'WARNING'}, "No vertex selected. Please select a vertex in Edit mode")
-            return {'CANCELLED'}
-
-        if len(selected_verts) > 1:
-            self.report({'WARNING'}, "Multiple vertices selected. Using the first one")
-
-        # Get vertex world position
-        vert = selected_verts[0]
-        world_pos = mesh_obj.matrix_world @ vert.co
-
-        # Store landmark
-        settings = context.scene.crossrig_settings
-        landmark = settings.smart_rig_landmarks.add()
-        landmark.landmark_id = self.landmark_id
-        landmark.landmark_side = self.landmark_side
-        landmark.position = world_pos
-
-        # Create a visual marker (empty object)
-        marker_name = f"Landmark_{self.landmark_id}_{self.landmark_side}"
-        if marker_name in bpy.data.objects:
-            bpy.data.objects.remove(bpy.data.objects[marker_name], do_unlink=True)
-
-        bpy.ops.object.empty_add(type='SPHERE', location=world_pos, radius=0.05)
-        marker = context.active_object
-        marker.name = marker_name
-        marker.show_in_front = True
-
-        # Set color based on side
-        if self.landmark_side == 'LEFT':
-            marker.empty_display_type = 'SPHERE'
-            marker.color = (1.0, 0.0, 0.0, 1.0)  # Red for left
-        elif self.landmark_side == 'RIGHT':
-            marker.empty_display_type = 'SPHERE'
-            marker.color = (0.0, 0.0, 1.0, 1.0)  # Blue for right
-        else:
-            marker.empty_display_type = 'SPHERE'
-            marker.color = (0.0, 1.0, 0.0, 1.0)  # Green for center
-
-        # Deselect vertex and reactivate mesh
-        mesh_obj.select_set(True)
-        context.view_layer.objects.active = mesh_obj
+        # Set cursor to crosshair
+        context.window.cursor_modal_set('CROSSHAIR')
+        context.window_manager.modal_handler_add(self)
 
         landmark_name = f"{self.landmark_id} ({self.landmark_side})"
-        self.report({'INFO'}, f"Landmark set: {landmark_name}")
+        self.report({'INFO'}, f"Click on mesh to place: {landmark_name}")
 
-        return {'FINISHED'}
+        return {'RUNNING_MODAL'}
 
 
 class CROSSRIG_OT_ClearLandmark(Operator):
