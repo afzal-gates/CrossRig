@@ -12,28 +12,91 @@ import math
 
 # Bone naming conventions matching standard armature naming
 BONE_NAMING = {
-    'head_top': 'head',
-    'head_center': 'head_mid',
-    'neck': 'neck',
-    'chin': 'jaw',
-    'spine_top': 'spine_03',
-    'spine_mid': 'spine_02',
-    'spine_bottom': 'spine_01',
-    'shoulder': {'LEFT': 'shoulder.L', 'RIGHT': 'shoulder.R'},
-    'elbow': {'LEFT': 'upper_arm.L', 'RIGHT': 'upper_arm.R'},
-    'wrist': {'LEFT': 'forearm.L', 'RIGHT': 'forearm.R'},
-    'hand': {'LEFT': 'hand.L', 'RIGHT': 'hand.R'},
-    'hip': {'LEFT': 'thigh.L', 'RIGHT': 'thigh.R'},
-    'knee': {'LEFT': 'shin.L', 'RIGHT': 'shin.R'},
-    'ankle': {'LEFT': 'foot.L', 'RIGHT': 'foot.R'},
-    'foot': {'LEFT': 'toe.L', 'RIGHT': 'toe.R'},
-    'toe': {'LEFT': 'toe_tip.L', 'RIGHT': 'toe_tip.R'},
+    'standard': {
+        'head_top': 'head',
+        'head_center': 'head_mid',
+        'neck': 'neck',
+        'chin': 'jaw',
+        'spine_top': 'spine_03',
+        'spine_mid': 'spine_02',
+        'spine_bottom': 'spine_01',
+        'shoulder': {'LEFT': 'shoulder.L', 'RIGHT': 'shoulder.R'},
+        'elbow': {'LEFT': 'upper_arm.L', 'RIGHT': 'upper_arm.R'},
+        'wrist': {'LEFT': 'forearm.L', 'RIGHT': 'forearm.R'},
+        'hand': {'LEFT': 'hand.L', 'RIGHT': 'hand.R'},
+        'hip': {'LEFT': 'thigh.L', 'RIGHT': 'thigh.R'},
+        'knee': {'LEFT': 'shin.L', 'RIGHT': 'shin.R'},
+        'ankle': {'LEFT': 'foot.L', 'RIGHT': 'foot.R'},
+        'foot': {'LEFT': 'toe.L', 'RIGHT': 'toe.R'},
+        'toe': {'LEFT': 'toe_tip.L', 'RIGHT': 'toe_tip.R'},
+        # Fingers
+        'thumb': {
+            'LEFT': ['thumb_01.L', 'thumb_02.L', 'thumb_03.L'],
+            'RIGHT': ['thumb_01.R', 'thumb_02.R', 'thumb_03.R']
+        },
+        'index': {
+            'LEFT': ['index_01.L', 'index_02.L', 'index_03.L'],
+            'RIGHT': ['index_01.R', 'index_02.R', 'index_03.R']
+        },
+        'middle': {
+            'LEFT': ['middle_01.L', 'middle_02.L', 'middle_03.L'],
+            'RIGHT': ['middle_01.R', 'middle_02.R', 'middle_03.R']
+        },
+        'ring': {
+            'LEFT': ['ring_01.L', 'ring_02.L', 'ring_03.L'],
+            'RIGHT': ['ring_01.R', 'ring_02.R', 'ring_03.R']
+        },
+        'pinky': {
+            'LEFT': ['pinky_01.L', 'pinky_02.L', 'pinky_03.L'],
+            'RIGHT': ['pinky_01.R', 'pinky_02.R', 'pinky_03.R']
+        },
+    },
+    'mixamo': {
+        'head_top': 'mixamorig:Head',
+        'head_center': 'mixamorig:HeadTop_End',
+        'neck': 'mixamorig:Neck',
+        'chin': 'mixamorig:Jaw',
+        'spine_top': 'mixamorig:Spine2',
+        'spine_mid': 'mixamorig:Spine1',
+        'spine_bottom': 'mixamorig:Spine',
+        'shoulder': {'LEFT': 'mixamorig:LeftShoulder', 'RIGHT': 'mixamorig:RightShoulder'},
+        'elbow': {'LEFT': 'mixamorig:LeftArm', 'RIGHT': 'mixamorig:RightArm'},
+        'wrist': {'LEFT': 'mixamorig:LeftForeArm', 'RIGHT': 'mixamorig:RightForeArm'},
+        'hand': {'LEFT': 'mixamorig:LeftHand', 'RIGHT': 'mixamorig:RightHand'},
+        'hip': {'LEFT': 'mixamorig:LeftUpLeg', 'RIGHT': 'mixamorig:RightUpLeg'},
+        'knee': {'LEFT': 'mixamorig:LeftLeg', 'RIGHT': 'mixamorig:RightLeg'},
+        'ankle': {'LEFT': 'mixamorig:LeftFoot', 'RIGHT': 'mixamorig:RightFoot'},
+        'foot': {'LEFT': 'mixamorig:LeftToeBase', 'RIGHT': 'mixamorig:RightToeBase'},
+        'toe': {'LEFT': 'mixamorig:LeftToe_End', 'RIGHT': 'mixamorig:RightToe_End'},
+        # Fingers
+        'thumb': {
+            'LEFT': ['mixamorig:LeftHandThumb1', 'mixamorig:LeftHandThumb2', 'mixamorig:LeftHandThumb3'],
+            'RIGHT': ['mixamorig:RightHandThumb1', 'mixamorig:RightHandThumb2', 'mixamorig:RightHandThumb3']
+        },
+        'index': {
+            'LEFT': ['mixamorig:LeftHandIndex1', 'mixamorig:LeftHandIndex2', 'mixamorig:LeftHandIndex3'],
+            'RIGHT': ['mixamorig:RightHandIndex1', 'mixamorig:RightHandIndex2', 'mixamorig:RightHandIndex3']
+        },
+        'middle': {
+            'LEFT': ['mixamorig:LeftHandMiddle1', 'mixamorig:LeftHandMiddle2', 'mixamorig:LeftHandMiddle3'],
+            'RIGHT': ['mixamorig:RightHandMiddle1', 'mixamorig:RightHandMiddle2', 'mixamorig:RightHandMiddle3']
+        },
+        'ring': {
+            'LEFT': ['mixamorig:LeftHandRing1', 'mixamorig:LeftHandRing2', 'mixamorig:LeftHandRing3'],
+            'RIGHT': ['mixamorig:RightHandRing1', 'mixamorig:RightHandRing2', 'mixamorig:RightHandRing3']
+        },
+        'pinky': {
+            'LEFT': ['mixamorig:LeftHandPinky1', 'mixamorig:LeftHandPinky2', 'mixamorig:LeftHandPinky3'],
+            'RIGHT': ['mixamorig:RightHandPinky1', 'mixamorig:RightHandPinky2', 'mixamorig:RightHandPinky3']
+        },
+    }
 }
 
 
-def get_bone_name(landmark_id, side='CENTER'):
+def get_bone_name(landmark_id, side='CENTER', naming='standard'):
     """Get standardized bone name for a landmark."""
-    name_def = BONE_NAMING.get(landmark_id)
+    naming_dict = BONE_NAMING.get(naming, BONE_NAMING['standard'])
+    name_def = naming_dict.get(landmark_id)
 
     if isinstance(name_def, dict):
         return name_def.get(side, landmark_id)
@@ -169,19 +232,25 @@ def create_bone_chain(edit_bones, bone_name, head_pos, tail_pos, parent=None, ro
     return bone
 
 
-def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, context=None):
+def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, context=None,
+                                    naming='standard', include_fingers=False, include_foot_details=False):
     """
     Generate an armature from user-selected landmarks.
 
     Smart Mode: Generates complete body skeleton from minimal landmarks.
     - 6 picks generates: spine (3), neck, head, arms (8), legs (10) = 23 bones
     - Automatically calculates all intermediate bones
+    - Optional: fingers (15 bones per hand = 30 total)
+    - Optional: detailed foot bones
 
     Args:
         landmarks: Collection of SmartRigLandmark property groups
         mesh_obj: Target mesh object
         auto_skin: If True, automatically parent and weight paint
         context: Blender context
+        naming: Naming convention ('standard' or 'mixamo')
+        include_fingers: If True, generate finger bones
+        include_foot_details: If True, generate detailed foot bones
 
     Returns:
         (success, message, armature_obj)
@@ -195,9 +264,10 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
         key = f"{lm.landmark_id}_{lm.landmark_side}"
         landmark_dict[key] = Vector(lm.position)
 
-    # Create armature
-    armature_data = bpy.data.armatures.new("SmartRig")
-    armature_obj = bpy.data.objects.new("SmartRig", armature_data)
+    # Create armature with appropriate name
+    armature_name = "Mixamo" if naming == 'mixamo' else "SmartRig"
+    armature_data = bpy.data.armatures.new(armature_name)
+    armature_obj = bpy.data.objects.new(armature_name, armature_data)
 
     # Link to scene
     context.collection.objects.link(armature_obj)
@@ -218,6 +288,9 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
     neck = interpolate_landmark(landmarks, 'neck', 'CENTER')
     head_top = interpolate_landmark(landmarks, 'head_top', 'CENTER')
 
+    # Get naming dictionary
+    naming_dict = BONE_NAMING.get(naming, BONE_NAMING['standard'])
+
     # Root bone (hips)
     if spine_bottom:
         # Create root bone pointing down slightly
@@ -225,8 +298,9 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
         root_head = spine_bottom.copy()
         root_head.z -= 0.2  # Small offset downward
 
+        root_name = 'mixamorig:Hips' if naming == 'mixamo' else 'root'
         root_bone = create_bone_chain(
-            edit_bones, 'root', root_head, root_tail
+            edit_bones, root_name, root_head, root_tail
         )
         created_bones['root'] = root_bone
 
@@ -234,16 +308,18 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
         current_parent = root_bone
 
         if spine_mid:
+            spine_02_name = naming_dict.get('spine_mid', 'spine_02')
             spine_02 = create_bone_chain(
-                edit_bones, 'spine_02', spine_bottom, spine_mid, current_parent
+                edit_bones, spine_02_name, spine_bottom, spine_mid, current_parent
             )
             created_bones['spine_02'] = spine_02
             current_parent = spine_02
 
         if spine_top:
             start = spine_mid if spine_mid else spine_bottom
+            spine_03_name = naming_dict.get('spine_top', 'spine_03')
             spine_03 = create_bone_chain(
-                edit_bones, 'spine_03', start, spine_top, current_parent
+                edit_bones, spine_03_name, start, spine_top, current_parent
             )
             created_bones['spine_03'] = spine_03
             current_parent = spine_03
@@ -251,8 +327,9 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
         # Neck
         if neck:
             start = spine_top if spine_top else (spine_mid if spine_mid else spine_bottom)
+            neck_name = naming_dict.get('neck', 'neck')
             neck_bone = create_bone_chain(
-                edit_bones, 'neck', start, neck, current_parent
+                edit_bones, neck_name, start, neck, current_parent
             )
             created_bones['neck'] = neck_bone
             current_parent = neck_bone
@@ -260,8 +337,9 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
         # Head
         if head_top:
             start = neck if neck else (spine_top if spine_top else spine_bottom)
+            head_name = naming_dict.get('head_top', 'head')
             head_bone = create_bone_chain(
-                edit_bones, 'head', start, head_top, current_parent
+                edit_bones, head_name, start, head_top, current_parent
             )
             created_bones['head'] = head_bone
 
@@ -283,35 +361,88 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
         arm_parent = created_bones.get('spine_03', created_bones.get('root'))
 
         # Shoulder bone (always create)
+        shoulder_name = naming_dict['shoulder'][side]
         shoulder_bone = create_bone_chain(
-            edit_bones, f'shoulder{side_suffix}',
+            edit_bones, shoulder_name,
             shoulder_attach, shoulder, arm_parent
         )
         created_bones[f'shoulder{side_suffix}'] = shoulder_bone
 
         # Upper arm (always create if elbow exists or can be interpolated)
         if elbow:
+            upper_arm_name = naming_dict['elbow'][side]
             upper_arm = create_bone_chain(
-                edit_bones, f'upper_arm{side_suffix}',
+                edit_bones, upper_arm_name,
                 shoulder, elbow, shoulder_bone
             )
             created_bones[f'upper_arm{side_suffix}'] = upper_arm
 
             # Forearm (always create if wrist exists or can be interpolated)
             if wrist:
+                forearm_name = naming_dict['wrist'][side]
                 forearm = create_bone_chain(
-                    edit_bones, f'forearm{side_suffix}',
+                    edit_bones, forearm_name,
                     elbow, wrist, upper_arm
                 )
                 created_bones[f'forearm{side_suffix}'] = forearm
 
                 # Hand (always create if it exists or can be interpolated)
                 if hand:
+                    hand_name = naming_dict['hand'][side]
                     hand_bone = create_bone_chain(
-                        edit_bones, f'hand{side_suffix}',
+                        edit_bones, hand_name,
                         wrist, hand, forearm
                     )
                     created_bones[f'hand{side_suffix}'] = hand_bone
+
+                    # === Fingers (optional) ===
+                    if include_fingers and wrist and hand:
+                        # Calculate finger base positions
+                        hand_dir = (hand - wrist).normalized()
+                        hand_width = (hand - wrist).length * 0.3
+
+                        # Right vector perpendicular to hand direction
+                        if side == 'LEFT':
+                            right_vec = Vector((hand_dir.y, -hand_dir.x, 0)).normalized()
+                        else:
+                            right_vec = Vector((-hand_dir.y, hand_dir.x, 0)).normalized()
+
+                        # Finger definitions: (name, offset_factor, length_factor)
+                        fingers = [
+                            ('thumb', -0.4, 0.25),
+                            ('index', -0.2, 0.35),
+                            ('middle', 0.0, 0.38),
+                            ('ring', 0.2, 0.35),
+                            ('pinky', 0.4, 0.28),
+                        ]
+
+                        naming_dict = BONE_NAMING.get(naming, BONE_NAMING['standard'])
+
+                        for finger_name, offset, length_factor in fingers:
+                            # Finger base position
+                            finger_base = hand + (right_vec * hand_width * offset)
+
+                            # Get finger bone names
+                            finger_bones = naming_dict[finger_name][side]
+
+                            # Create 3 finger bones
+                            finger_length = (hand - wrist).length * length_factor
+                            segment_length = finger_length / 3
+
+                            current_pos = finger_base
+                            finger_parent = hand_bone
+
+                            for i, bone_name in enumerate(finger_bones):
+                                next_pos = current_pos + (hand_dir * segment_length)
+
+                                finger_bone = create_bone_chain(
+                                    edit_bones, bone_name,
+                                    current_pos, next_pos, finger_parent
+                                )
+                                created_bones[bone_name] = finger_bone
+
+                                current_pos = next_pos
+                                finger_parent = finger_bone
 
     # === Create Legs (ALWAYS generate all leg bones) ===
     hip_attach = spine_bottom if spine_bottom else interpolate_landmark(landmarks, 'spine_mid', 'CENTER')
@@ -333,32 +464,36 @@ def generate_armature_from_landmarks(landmarks, mesh_obj, auto_skin=True, contex
 
         # Thigh (always create if knee exists or can be interpolated)
         if knee:
+            thigh_name = naming_dict['hip'][side]
             thigh = create_bone_chain(
-                edit_bones, f'thigh{side_suffix}',
+                edit_bones, thigh_name,
                 hip, knee, leg_parent
             )
             created_bones[f'thigh{side_suffix}'] = thigh
 
             # Shin (always create if ankle exists or can be interpolated)
             if ankle:
+                shin_name = naming_dict['knee'][side]
                 shin = create_bone_chain(
-                    edit_bones, f'shin{side_suffix}',
+                    edit_bones, shin_name,
                     knee, ankle, thigh
                 )
                 created_bones[f'shin{side_suffix}'] = shin
 
                 # Foot (always create if it exists or can be interpolated)
                 if foot:
+                    foot_name = naming_dict['ankle'][side]
                     foot_bone = create_bone_chain(
-                        edit_bones, f'foot{side_suffix}',
+                        edit_bones, foot_name,
                         ankle, foot, shin
                     )
                     created_bones[f'foot{side_suffix}'] = foot_bone
 
                     # Toe (always create if it exists or can be interpolated)
                     if toe:
+                        toe_name = naming_dict['foot'][side]
                         toe_bone = create_bone_chain(
-                            edit_bones, f'toe{side_suffix}',
+                            edit_bones, toe_name,
                             foot, toe, foot_bone
                         )
                         created_bones[f'toe{side_suffix}'] = toe_bone

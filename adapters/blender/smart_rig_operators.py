@@ -54,6 +54,22 @@ BONE_SET_PRESETS = {
         ],
         'auto_mirror': True,
         'interpolate': True,
+        'naming': 'standard',
+    },
+    'MIXAMO': {
+        'name': 'Mixamo Standard',
+        'description': 'Mixamo-compatible armature with mixamorig: prefix (6 picks)',
+        'required': [
+            ('neck', 'CENTER'),
+            ('chin', 'CENTER'),
+            ('spine_bottom', 'CENTER'),  # Hip
+            ('shoulder', 'LEFT'),
+            ('wrist', 'LEFT'),
+            ('ankle', 'LEFT'),
+        ],
+        'auto_mirror': True,
+        'interpolate': True,
+        'naming': 'mixamo',
     },
     'MINIMAL': {
         'name': 'Minimal',
@@ -70,6 +86,7 @@ BONE_SET_PRESETS = {
         ],
         'auto_mirror': True,
         'interpolate': True,
+        'naming': 'standard',
     },
     'STANDARD': {
         'name': 'Standard',
@@ -77,6 +94,7 @@ BONE_SET_PRESETS = {
         'required': [],
         'auto_mirror': False,
         'interpolate': False,
+        'naming': 'standard',
     },
 }
 
@@ -413,11 +431,20 @@ class CROSSRIG_OT_GenerateSmartRig(Operator):
         box = layout.box()
         box.label(text="Will Generate:", icon='ARMATURE_DATA')
 
-        if bone_set == 'SMART':
-            box.label(text="• Complete body skeleton (23 bones)", icon='DOT')
+        if bone_set == 'SMART' or bone_set == 'MIXAMO':
+            base_bones = 23
+            finger_bones = 30 if settings.smart_rig_include_fingers else 0
+            foot_bones = 0  # Will add later if foot details implemented
+            total_bones = base_bones + finger_bones + foot_bones
+
+            naming_type = "Mixamo" if bone_set == 'MIXAMO' else "Standard"
+            box.label(text=f"• Complete body skeleton ({total_bones} bones)", icon='DOT')
+            box.label(text=f"• Naming: {naming_type}", icon='DOT')
             box.label(text="• Spine chain (root + 3 vertebrae)", icon='DOT')
             box.label(text="• Neck + Head", icon='DOT')
             box.label(text="• Arms (shoulder → elbow → wrist → hand) x2", icon='DOT')
+            if settings.smart_rig_include_fingers:
+                box.label(text="• Fingers (5 fingers × 3 bones × 2 hands = 30)", icon='DOT')
             box.label(text="• Legs (hip → knee → ankle → foot → toe) x2", icon='DOT')
             layout.separator()
             layout.label(text="All bones auto-calculated from your 6 picks!", icon='INFO')
@@ -452,11 +479,17 @@ class CROSSRIG_OT_GenerateSmartRig(Operator):
         # Call the rig generation service
         from ...core.services.smart_rig_service import generate_armature_from_landmarks
 
+        # Determine naming convention from bone set
+        naming = 'mixamo' if bone_set == 'MIXAMO' else 'standard'
+
         success, message, armature_obj = generate_armature_from_landmarks(
             landmarks=settings.smart_rig_landmarks,
             mesh_obj=mesh_obj,
             auto_skin=self.auto_skin,
-            context=context
+            context=context,
+            naming=naming,
+            include_fingers=settings.smart_rig_include_fingers,
+            include_foot_details=settings.smart_rig_include_foot_details
         )
 
         if success:

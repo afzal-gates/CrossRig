@@ -17,7 +17,7 @@ License: MIT
 bl_info = {
     "name": "CrossRig",
     "author": "Afzal Hossain",
-    "version": (1, 0, 0),
+    "version": (1, 2, 0),
     "blender": (3, 5, 0),
     "location": "View3D > Sidebar > CrossRig",
     "description": "Animation sequencing and cross-rig retargeting with intelligent bone mapping.",

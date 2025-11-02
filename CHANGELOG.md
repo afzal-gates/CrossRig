@@ -5,6 +5,56 @@ All notable changes to CrossRig will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-11-03
+
+### Added - Mixamo Support & Optional Finger Bones
+
+#### Mixamo Armature Preset
+- **Mixamo Standard Bone Set**: Generate Mixamo-compatible armatures
+  - Automatic `mixamorig:` prefix for all bone names
+  - Standard Mixamo naming convention (Hips, Spine, LeftArm, RightArm, etc.)
+  - Compatible with Mixamo animations out of the box
+  - Same 6-landmark Smart workflow as standard mode
+  - Perfect for game-ready characters and animation retargeting
+
+#### Optional Finger Bones
+- **Finger Generation**: Optional 30-bone finger rig (15 per hand)
+  - 5 fingers per hand: Thumb, Index, Middle, Ring, Pinky
+  - 3 bones per finger for natural deformation
+  - Intelligent finger placement based on hand direction
+  - Proper parent-child hierarchy
+  - Works with both Standard and Mixamo naming conventions
+  - Toggle on/off via UI checkbox
+
+#### Optional Foot Details
+- **Detailed Foot Bones**: UI toggle for future foot bone generation
+  - Prepared infrastructure for toe bones
+  - Reserved for future detailed foot rigging
+
+### Enhanced
+- **Bone Set Options**: Now includes 4 presets
+  - Smart (Auto-Rig Pro): Standard naming, 6-landmark workflow
+  - Mixamo Standard: Mixamo naming, 6-landmark workflow
+  - Minimal: Basic skeleton (8 landmarks)
+  - Standard: Complete humanoid rig (15-20 landmarks)
+
+- **Generation Dialog**: Improved preview display
+  - Shows total bone count (base + fingers)
+  - Displays naming convention type
+  - Lists optional bones when enabled
+  - Clear breakdown of skeleton components
+
+### Technical
+- **Dual Naming System**: Support for multiple bone naming conventions
+  - Standard: `.L`/`.R` suffix pattern
+  - Mixamo: `mixamorig:` prefix with `Left`/`Right` naming
+  - Extensible for future naming conventions
+
+- **Smart Bone Interpolation**: All bones calculated from 6 picks
+  - Complete 23-bone body skeleton always generated
+  - Optional 30 finger bones with procedural placement
+  - Center of mass bone positioning
+
 ## [1.1.0] - 2025-11-02
 
 ### Added - Smart Rig Feature (Auto-Rig Pro-like Functionality)

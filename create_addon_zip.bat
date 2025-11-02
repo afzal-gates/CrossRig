@@ -12,7 +12,7 @@ echo.
 
 REM Set variables
 set ADDON_NAME=CrossRig
-set VERSION=1.1.0
+set VERSION=1.2.0
 set RELEASE_DIR=release
 set TEMP_DIR=%ADDON_NAME%_temp
 

@@ -296,10 +296,23 @@ class CrossRigSettings(PropertyGroup):
         description="Predefined bone set presets",
         items=[
             ('SMART', 'Smart (Auto-Rig Pro)', 'Minimal landmarks with auto-interpolation (6 picks: Neck, Chin, Hip, L Shoulder, L Wrist, L Ankle)'),
+            ('MIXAMO', 'Mixamo Standard', 'Mixamo-compatible armature with mixamorig: prefix'),
             ('MINIMAL', 'Minimal', 'Basic skeleton (8 landmarks)'),
             ('STANDARD', 'Standard', 'Complete humanoid rig (15-20 landmarks)'),
         ],
         default='SMART'
+    )
+
+    smart_rig_include_fingers: BoolProperty(
+        name="Include Fingers",
+        description="Generate finger bones (5 fingers × 3 bones = 15 bones per hand)",
+        default=False
+    )
+
+    smart_rig_include_foot_details: BoolProperty(
+        name="Include Foot Details",
+        description="Generate detailed foot bones",
+        default=False
     )
 
     show_smart_rig: BoolProperty(

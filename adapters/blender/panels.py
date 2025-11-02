@@ -456,6 +456,14 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                     row = sub_box.row(align=True)
                     row.operator("crossrig.auto_detect_symmetry", text="Auto-Mirror Landmarks", icon='MOD_MIRROR')
 
+                    # Optional bone generation
+                    options_box = sub_box.box()
+                    options_box.label(text="Optional Bones:", icon='BONE_DATA')
+                    row = options_box.row()
+                    row.prop(prefs, "smart_rig_include_fingers", text="Fingers (15 per hand)")
+                    row = options_box.row()
+                    row.prop(prefs, "smart_rig_include_foot_details", text="Detailed Feet")
+
                     # Actions
                     row = sub_box.row(align=True)
                     row.operator("crossrig.generate_smart_rig", text="Generate Rig", icon='ARMATURE_DATA')
