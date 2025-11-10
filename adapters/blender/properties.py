@@ -305,7 +305,7 @@ class CrossRigSettings(PropertyGroup):
 
     smart_rig_include_fingers: BoolProperty(
         name="Include Fingers",
-        description="Generate finger bones (5 fingers × 3 bones = 15 bones per hand)",
+        description="Generate finger bones (5 fingers × 3 bones = 15 bones per hand). Pick finger landmarks for manual placement or leave unpicked for auto-generation",
         default=False
     )
 
@@ -315,9 +315,54 @@ class CrossRigSettings(PropertyGroup):
         default=False
     )
 
+    smart_rig_auto_tpose: BoolProperty(
+        name="Auto T-Pose After Generation",
+        description="Automatically apply T-pose after generating armature. If disabled, use 'Apply T-Pose' button manually",
+        default=False
+    )
+
     show_smart_rig: BoolProperty(
         name="Smart Rig",
         description="Show/Hide Smart Rig subsection",
+        default=False
+    )
+
+    # Bone Repositioning Properties
+    bone_reposition_active: BoolProperty(
+        name="Bone Reposition Active",
+        description="Bone repositioning mode is active",
+        default=False
+    )
+
+    bone_reposition_armature: PointerProperty(
+        name="Armature",
+        description="Armature to reposition bones",
+        type=bpy.types.Object,
+        poll=lambda self, obj: obj.type == 'ARMATURE'
+    )
+
+    bone_reposition_mesh: PointerProperty(
+        name="Target Mesh",
+        description="Mesh to pick positions from",
+        type=bpy.types.Object,
+        poll=lambda self, obj: obj.type == 'MESH'
+    )
+
+    bone_reposition_mirror: BoolProperty(
+        name="Mirror Mode",
+        description="Automatically mirror bone repositioning to opposite side (Left ↔ Right)",
+        default=False
+    )
+
+    bone_reposition_history: StringProperty(
+        name="Repositioned Bones",
+        description="Comma-separated list of repositioned bone names for edit mode tracking",
+        default=""
+    )
+
+    show_bone_reposition: BoolProperty(
+        name="Bone Repositioning",
+        description="Show/Hide Bone Repositioning subsection",
         default=False
     )
 

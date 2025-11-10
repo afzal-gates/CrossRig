@@ -357,6 +357,33 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                     row = sub_box.row()
                     row.label(text=f"Landmarks: {landmark_count}", icon='EMPTY_DATA')
 
+                    # Show picked landmarks list with edit/delete options
+                    if landmark_count > 0:
+                        landmarks_box = sub_box.box()
+                        landmarks_box.label(text="Picked Landmarks (Edit Mode):", icon='EDITMODE_HLT')
+
+                        for idx, landmark in enumerate(prefs.smart_rig_landmarks):
+                            row = landmarks_box.row(align=True)
+
+                            # Landmark info with color-coded icon
+                            if landmark.landmark_side == 'CENTER':
+                                icon = 'SPHERE'
+                            elif landmark.landmark_side == 'LEFT':
+                                icon = 'BACK'
+                            else:
+                                icon = 'FORWARD'
+
+                            row.label(text=f"{landmark.landmark_id} ({landmark.landmark_side})", icon=icon)
+
+                            # Re-pick button (edit)
+                            op = row.operator("crossrig.pick_landmark", text="", icon='GREASEPENCIL', emboss=True)
+                            op.landmark_id = landmark.landmark_id
+                            op.landmark_side = landmark.landmark_side
+
+                            # Delete button
+                            op = row.operator("crossrig.clear_landmark", text="", icon='X', emboss=True)
+                            op.index = str(idx)
+
                     # Quick landmark buttons
                     inner_box = sub_box.box()
 
@@ -377,8 +404,8 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                         op.landmark_id = "chin"
                         op.landmark_side = 'CENTER'
 
-                        op = flow.operator("crossrig.pick_landmark", text="3. Hip (Center)")
-                        op.landmark_id = "spine_bottom"
+                        op = flow.operator("crossrig.pick_landmark", text="3. Hips (Center)")
+                        op.landmark_id = "hips"
                         op.landmark_side = 'CENTER'
 
                         op = flow.operator("crossrig.pick_landmark", text="4. Left Shoulder")
@@ -401,56 +428,183 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                         inner_box.label(text="Pick Landmarks (Click button → Click mesh)", icon='HAND')
 
                     # Head/Neck landmarks
-                    flow = inner_box.grid_flow(row_major=True, columns=2, align=True)
+                    flow = inner_box.grid_flow(row_major=True, columns=3, align=True)
                     op = flow.operator("crossrig.pick_landmark", text="Head Top")
                     op.landmark_id = "head_top"
+                    op.landmark_side = 'CENTER'
+
+                    op = flow.operator("crossrig.pick_landmark", text="Head Top End")
+                    op.landmark_id = "head_center"
                     op.landmark_side = 'CENTER'
 
                     op = flow.operator("crossrig.pick_landmark", text="Neck")
                     op.landmark_id = "neck"
                     op.landmark_side = 'CENTER'
 
-                    # Spine landmarks
-                    flow = inner_box.grid_flow(row_major=True, columns=3, align=True)
-                    op = flow.operator("crossrig.pick_landmark", text="Spine Top")
-                    op.landmark_id = "spine_top"
+                    # Spine landmarks (show all 4 in full modes)
+                    spine_box = inner_box.box()
+                    spine_box.label(text="Spine Chain (4 bones):", icon='CONSTRAINT_BONE')
+                    flow = spine_box.grid_flow(row_major=True, columns=2, align=True)
+
+                    op = flow.operator("crossrig.pick_landmark", text="Hips (Root)")
+                    op.landmark_id = "hips"
+                    op.landmark_side = 'CENTER'
+
+                    op = flow.operator("crossrig.pick_landmark", text="Spine Bottom")
+                    op.landmark_id = "spine_bottom"
                     op.landmark_side = 'CENTER'
 
                     op = flow.operator("crossrig.pick_landmark", text="Spine Mid")
                     op.landmark_id = "spine_mid"
                     op.landmark_side = 'CENTER'
 
-                    op = flow.operator("crossrig.pick_landmark", text="Hips")
-                    op.landmark_id = "spine_bottom"
+                    op = flow.operator("crossrig.pick_landmark", text="Spine Top")
+                    op.landmark_id = "spine_top"
                     op.landmark_side = 'CENTER'
 
-                    # Bilateral landmarks - Arms
-                    inner_box.label(text="Arms (L/R):", icon='CONSTRAINT_BONE')
-                    flow = inner_box.grid_flow(row_major=True, columns=2, align=True)
+                    # LEFT SIDE SECTION
+                    left_box = inner_box.box()
+                    left_box.label(text="━━━ LEFT SIDE ━━━", icon='BACK')
+
+                    # Left Arms
+                    arm_header = left_box.row()
+                    arm_header.label(text="Arm Bones:", icon='CONSTRAINT_BONE')
+                    flow = left_box.grid_flow(row_major=True, columns=2, align=True)
 
                     for limb_part in [('shoulder', 'Shoulder'), ('elbow', 'Elbow'), ('wrist', 'Wrist'), ('hand', 'Hand')]:
-                        row_lr = flow.row(align=True)
-                        op_l = row_lr.operator("crossrig.pick_landmark", text=f"L {limb_part[1]}")
-                        op_l.landmark_id = limb_part[0]
-                        op_l.landmark_side = 'LEFT'
+                        op = flow.operator("crossrig.pick_landmark", text=limb_part[1])
+                        op.landmark_id = limb_part[0]
+                        op.landmark_side = 'LEFT'
 
-                        op_r = row_lr.operator("crossrig.pick_landmark", text=f"R {limb_part[1]}")
-                        op_r.landmark_id = limb_part[0]
-                        op_r.landmark_side = 'RIGHT'
+                    # Left Fingers (optional - shown when fingers enabled)
+                    if prefs.smart_rig_include_fingers:
+                        left_box.separator()
+                        finger_header = left_box.row()
+                        finger_header.label(text="Finger Bones (Optional):", icon='HAND')
+                        left_box.label(text="Pick or leave for auto-generation", icon='INFO')
 
-                    # Bilateral landmarks - Legs
-                    inner_box.label(text="Legs (L/R):", icon='CONSTRAINT_BONE')
-                    flow = inner_box.grid_flow(row_major=True, columns=2, align=True)
+                        # Thumb (4 bones for Mixamo Standard)
+                        left_box.label(text="Thumb:", icon='DOT')
+                        flow = left_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Thumb {seg}")
+                            op.landmark_id = f"thumb_{seg}"
+                            op.landmark_side = 'LEFT'
+
+                        # Index (4 bones for Mixamo Standard)
+                        left_box.label(text="Index:", icon='DOT')
+                        flow = left_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Index {seg}")
+                            op.landmark_id = f"index_{seg}"
+                            op.landmark_side = 'LEFT'
+
+                        # Middle (4 bones for Mixamo Standard)
+                        left_box.label(text="Middle:", icon='DOT')
+                        flow = left_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Middle {seg}")
+                            op.landmark_id = f"middle_{seg}"
+                            op.landmark_side = 'LEFT'
+
+                        # Ring (4 bones for Mixamo Standard)
+                        left_box.label(text="Ring:", icon='DOT')
+                        flow = left_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Ring {seg}")
+                            op.landmark_id = f"ring_{seg}"
+                            op.landmark_side = 'LEFT'
+
+                        # Pinky (4 bones for Mixamo Standard)
+                        left_box.label(text="Pinky:", icon='DOT')
+                        flow = left_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Pinky {seg}")
+                            op.landmark_id = f"pinky_{seg}"
+                            op.landmark_side = 'LEFT'
+
+                    # Left Legs
+                    left_box.separator()
+                    leg_header = left_box.row()
+                    leg_header.label(text="Leg Bones:", icon='CONSTRAINT_BONE')
+                    flow = left_box.grid_flow(row_major=True, columns=2, align=True)
 
                     for limb_part in [('hip', 'Hip'), ('knee', 'Knee'), ('ankle', 'Ankle'), ('foot', 'Foot'), ('toe', 'Toe')]:
-                        row_lr = flow.row(align=True)
-                        op_l = row_lr.operator("crossrig.pick_landmark", text=f"L {limb_part[1]}")
-                        op_l.landmark_id = limb_part[0]
-                        op_l.landmark_side = 'LEFT'
+                        op = flow.operator("crossrig.pick_landmark", text=limb_part[1])
+                        op.landmark_id = limb_part[0]
+                        op.landmark_side = 'LEFT'
 
-                        op_r = row_lr.operator("crossrig.pick_landmark", text=f"R {limb_part[1]}")
-                        op_r.landmark_id = limb_part[0]
-                        op_r.landmark_side = 'RIGHT'
+                    # RIGHT SIDE SECTION
+                    right_box = inner_box.box()
+                    right_box.label(text="━━━ RIGHT SIDE ━━━", icon='FORWARD')
+
+                    # Right Arms
+                    arm_header = right_box.row()
+                    arm_header.label(text="Arm Bones:", icon='CONSTRAINT_BONE')
+                    flow = right_box.grid_flow(row_major=True, columns=2, align=True)
+
+                    for limb_part in [('shoulder', 'Shoulder'), ('elbow', 'Elbow'), ('wrist', 'Wrist'), ('hand', 'Hand')]:
+                        op = flow.operator("crossrig.pick_landmark", text=limb_part[1])
+                        op.landmark_id = limb_part[0]
+                        op.landmark_side = 'RIGHT'
+
+                    # Right Fingers (optional - shown when fingers enabled)
+                    if prefs.smart_rig_include_fingers:
+                        right_box.separator()
+                        finger_header = right_box.row()
+                        finger_header.label(text="Finger Bones (Optional):", icon='HAND')
+                        right_box.label(text="Pick or leave for auto-generation", icon='INFO')
+
+                        # Thumb (4 bones for Mixamo Standard)
+                        right_box.label(text="Thumb:", icon='DOT')
+                        flow = right_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Thumb {seg}")
+                            op.landmark_id = f"thumb_{seg}"
+                            op.landmark_side = 'RIGHT'
+
+                        # Index (4 bones for Mixamo Standard)
+                        right_box.label(text="Index:", icon='DOT')
+                        flow = right_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Index {seg}")
+                            op.landmark_id = f"index_{seg}"
+                            op.landmark_side = 'RIGHT'
+
+                        # Middle (4 bones for Mixamo Standard)
+                        right_box.label(text="Middle:", icon='DOT')
+                        flow = right_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Middle {seg}")
+                            op.landmark_id = f"middle_{seg}"
+                            op.landmark_side = 'RIGHT'
+
+                        # Ring (4 bones for Mixamo Standard)
+                        right_box.label(text="Ring:", icon='DOT')
+                        flow = right_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Ring {seg}")
+                            op.landmark_id = f"ring_{seg}"
+                            op.landmark_side = 'RIGHT'
+
+                        # Pinky (4 bones for Mixamo Standard)
+                        right_box.label(text="Pinky:", icon='DOT')
+                        flow = right_box.grid_flow(row_major=True, columns=4, align=True)
+                        for seg in ['01', '02', '03', '04']:
+                            op = flow.operator("crossrig.pick_landmark", text=f"Pinky {seg}")
+                            op.landmark_id = f"pinky_{seg}"
+                            op.landmark_side = 'RIGHT'
+
+                    # Right Legs
+                    right_box.separator()
+                    leg_header = right_box.row()
+                    leg_header.label(text="Leg Bones:", icon='CONSTRAINT_BONE')
+                    flow = right_box.grid_flow(row_major=True, columns=2, align=True)
+
+                    for limb_part in [('hip', 'Hip'), ('knee', 'Knee'), ('ankle', 'Ankle'), ('foot', 'Foot'), ('toe', 'Toe')]:
+                        op = flow.operator("crossrig.pick_landmark", text=limb_part[1])
+                        op.landmark_id = limb_part[0]
+                        op.landmark_side = 'RIGHT'
 
                     # Symmetry tools
                     row = sub_box.row(align=True)
@@ -459,18 +613,281 @@ class CROSSRIG_PT_UnifiedPanel(Panel):
                     # Optional bone generation
                     options_box = sub_box.box()
                     options_box.label(text="Optional Bones:", icon='BONE_DATA')
+
+                    # Fingers toggle with info
                     row = options_box.row()
-                    row.prop(prefs, "smart_rig_include_fingers", text="Fingers (15 per hand)")
+                    row.prop(prefs, "smart_rig_include_fingers", text="Include Finger Bones")
+
+                    # T-Pose toggle
                     row = options_box.row()
-                    row.prop(prefs, "smart_rig_include_foot_details", text="Detailed Feet")
+                    row.prop(prefs, "smart_rig_auto_tpose", text="Auto T-Pose After Generation")
+                    if not prefs.smart_rig_auto_tpose:
+                        info_row = options_box.row()
+                        info_row.label(text="Disabled: Use 'Apply T-Pose' button after generation", icon='INFO')
+
+                    if prefs.smart_rig_include_fingers:
+                        info_box = options_box.box()
+                        info_box.label(text="Finger Bones (5 fingers × 4 bones per hand)", icon='INFO')
+                        info_box.label(text="Total: 40 finger bones (20 per hand)", icon='BONE_DATA')
+                        info_box.label(text="Pick landmarks below in Left/Right sections", icon='HAND')
+                        info_box.label(text="Or leave unpicked for auto-generation", icon='AUTO')
+
+                    # Foot details toggle
+                    row = options_box.row()
+                    row.prop(prefs, "smart_rig_include_foot_details", text="Include Detailed Feet")
 
                     # Actions
                     row = sub_box.row(align=True)
-                    row.operator("crossrig.generate_smart_rig", text="Generate Rig", icon='ARMATURE_DATA')
+                    row.operator("crossrig.generate_smart_rig", text="Generate Armature", icon='ARMATURE_DATA')
                     row.operator("crossrig.clear_all_landmarks", text="Clear All", icon='X')
+
+                    # T-Pose button - shown in smart rig mode
+                    row = sub_box.row()
+                    row.operator("crossrig.apply_tpose", text="Apply T-Pose", icon='OUTLINER_OB_ARMATURE')
+                    row.scale_y = 1.2
 
                     row = sub_box.row()
                     row.operator("crossrig.exit_smart_rig_mode", text="Exit Mode", icon='CANCEL')
+
+                # === Generate Control Rig Section (always show when expanded) ===
+                sub_box.separator()
+                generate_box = sub_box.box()
+                generate_box.label(text="Armature Tools:", icon='OUTLINER_OB_ARMATURE')
+                row = generate_box.row()
+                row.label(text="Select armature, then choose action:", icon='INFO')
+
+                # T-Pose button
+                row = generate_box.row()
+                row.operator("crossrig.apply_tpose", text="Apply T-Pose", icon='OUTLINER_OB_ARMATURE')
+                row.scale_y = 1.3
+
+                # Control Rig button
+                row = generate_box.row()
+                row.operator("crossrig.generate_control_rig", text="Generate Rig (Rigify)", icon='CON_ARMATURE')
+                row.scale_y = 1.3
+
+            # === Bone Repositioning Subsection ===
+            col.separator()
+            row = col.row(align=True)
+            sub_icon = 'TRIA_DOWN' if prefs.show_bone_reposition else 'TRIA_RIGHT'
+            row.prop(prefs, "show_bone_reposition", icon=sub_icon, icon_only=True, emboss=False)
+            row.label(text="Bone Repositioning", icon='BONE_DATA')
+
+            if prefs.show_bone_reposition:
+                sub_box = col.box()
+
+                if not prefs.bone_reposition_active:
+                    # Not in bone reposition mode - show setup
+                    row = sub_box.row()
+                    row.prop(prefs, "bone_reposition_armature", text="Armature")
+
+                    row = sub_box.row()
+                    row.prop(prefs, "bone_reposition_mesh", text="Mesh")
+
+                    row = sub_box.row()
+                    row.prop(prefs, "bone_reposition_mirror", text="Mirror Mode (L ↔ R)")
+
+                    # Smart armature-to-mesh mapping (Full body auto-detection)
+                    row = sub_box.row()
+                    row.label(text="Smart Body Mapping:", icon='ARMATURE_DATA')
+
+                    row = sub_box.row()
+                    row.operator("crossrig.smart_map_armature_to_mesh", text="Auto-Detect Body Landmarks", icon='UV_SYNC_SELECT')
+                    row.scale_y = 1.5
+
+                    # Smart hand-finger mapping buttons
+                    row = sub_box.row()
+                    row.label(text="Smart Hand Mapping:", icon='HAND')
+
+                    row = sub_box.row()
+                    split = row.split(factor=0.5)
+                    left_col = split.column()
+                    right_col = split.column()
+
+                    op = left_col.operator("crossrig.smart_map_hand_fingers", text="Map Left Hand", icon='FORWARD')
+                    op.side = 'LEFT'
+
+                    op = right_col.operator("crossrig.smart_map_hand_fingers", text="Map Right Hand", icon='BACK')
+                    op.side = 'RIGHT'
+
+                    # Finger alignment tool
+                    row = sub_box.row()
+                    row.label(text="Finger Alignment:", icon='SNAP_ON')
+
+                    row = sub_box.row()
+                    row.operator("crossrig.align_finger_to_hand", text="Align Selected Finger to Hand", icon='ORIENTATION_NORMAL')
+                    row.scale_y = 1.3
+
+                    row = sub_box.row()
+                    row.label(text="In Pose Mode: Select finger tip → Click Align", icon='INFO')
+
+                    # Interactive finger alignment by clicking mesh
+                    row = sub_box.row()
+                    row.operator("crossrig.align_finger_by_mesh_click", text="Click Finger Tip to Align", icon='HAND')
+                    row.scale_y = 1.3
+
+                    row = sub_box.row()
+                    row.label(text="In Object Mode: Click on finger tip mesh to auto-align", icon='INFO')
+
+                    row = sub_box.row()
+                    row.operator("crossrig.start_bone_reposition_mode", text="Start Repositioning", icon='PLAY')
+
+                    row = sub_box.row()
+                    row.label(text="Select armature and mesh, then click Start", icon='INFO')
+                else:
+                    # In bone reposition mode - show bone list
+                    armature_obj = prefs.bone_reposition_armature
+
+                    if armature_obj and armature_obj.type == 'ARMATURE':
+                        row = sub_box.row()
+                        row.label(text=f"Armature: {armature_obj.name}", icon='ARMATURE_DATA')
+                        row = sub_box.row()
+                        row.label(text=f"Mesh: {prefs.bone_reposition_mesh.name}", icon='MESH_DATA')
+
+                        # Show bone count
+                        bone_count = len(armature_obj.data.bones)
+                        row = sub_box.row()
+                        row.label(text=f"Bones: {bone_count}", icon='BONE_DATA')
+
+                        # Show mirror mode status
+                        if prefs.bone_reposition_mirror:
+                            row = sub_box.row()
+                            row.label(text="Mirror Mode: ON (L ↔ R)", icon='MOD_MIRROR')
+
+                        # Toggle mirror mode while active
+                        row = sub_box.row()
+                        row.prop(prefs, "bone_reposition_mirror", text="Mirror Mode")
+
+                        # Import grouping functions
+                        from .bone_reposition_operators import group_bones_by_category, get_group_icon
+
+                        # Get all bone names and group them
+                        bone_names = [bone.name for bone in armature_obj.data.bones]
+                        bone_groups = group_bones_by_category(bone_names)
+
+                        # List bones organized by groups
+                        inner_box = sub_box.box()
+                        inner_box.label(text="Click bone to reposition:", icon='HAND')
+
+                        # Display each group
+                        for group_name, bones in bone_groups.items():
+                            if not bones:
+                                continue
+
+                            # Group header
+                            group_box = inner_box.box()
+                            group_icon = get_group_icon(group_name)
+                            group_box.label(text=f"{group_name} ({len(bones)})", icon=group_icon)
+
+                            # Special handling for hand groups - show finger subgroups
+                            if group_name in ['Left Hand', 'Right Hand']:
+                                # Import finger detection function
+                                from .bone_reposition_operators import detect_hand_finger_hierarchy
+
+                                # Determine side
+                                side = 'LEFT' if 'Left' in group_name else 'RIGHT'
+
+                                # Detect hand and fingers
+                                hand_data = detect_hand_finger_hierarchy(armature_obj, side)
+
+                                if hand_data['hand']:
+                                    # Show hand bone first
+                                    hand_box = group_box.box()
+                                    hand_box.label(text="Hand Bone:", icon='BONE_DATA')
+                                    op = hand_box.operator("crossrig.reposition_bone", text=hand_data['hand'])
+                                    op.bone_name = hand_data['hand']
+
+                                    # Show finger groups with smart align buttons
+                                    finger_box = group_box.box()
+                                    finger_box.label(text="Smart Finger Alignment:", icon='HAND')
+
+                                    # Create 5-column layout for fingers
+                                    finger_grid = finger_box.grid_flow(row_major=False, columns=5, align=True)
+
+                                    for finger_type in ['thumb', 'index', 'middle', 'ring', 'pinky']:
+                                        finger_bones = hand_data['fingers'].get(finger_type, [])
+                                        if finger_bones:
+                                            # Create column for this finger
+                                            finger_col = finger_grid.column(align=True)
+
+                                            # Finger icon and name
+                                            finger_col.label(text=finger_type.capitalize(), icon='NORMALIZE_FCURVES')
+
+                                            # Smart align button
+                                            op = finger_col.operator(
+                                                "crossrig.smart_align_finger_to_mesh",
+                                                text=f"Align",
+                                                icon='SNAP_ON'
+                                            )
+                                            op.finger_type = finger_type
+                                            op.side = side
+
+                                            # Show bone count
+                                            finger_col.label(text=f"({len(finger_bones)} bones)")
+
+                                    # Show all finger bones in expandable section
+                                    bones_box = group_box.box()
+                                    bones_box.label(text="Individual Bones:", icon='BONE_DATA')
+
+                                    # Get repositioned bones history
+                                    history = prefs.bone_reposition_history
+                                    repositioned_set = set(history.split(',')) if history else set()
+
+                                    flow = bones_box.grid_flow(row_major=True, columns=2, align=True)
+                                    for bone_name in bones:
+                                        row = flow.row(align=True)
+
+                                        # Show checkmark for repositioned bones
+                                        if bone_name in repositioned_set:
+                                            row.label(text="", icon='CHECKMARK')
+
+                                        op = row.operator("crossrig.reposition_bone", text=bone_name)
+                                        op.bone_name = bone_name
+                                else:
+                                    # Fallback: show bones normally if hand not detected
+                                    # Get repositioned bones history
+                                    history = prefs.bone_reposition_history
+                                    repositioned_set = set(history.split(',')) if history else set()
+
+                                    flow = group_box.grid_flow(row_major=True, columns=2, align=True)
+                                    for bone_name in bones:
+                                        row = flow.row(align=True)
+                                        if bone_name in repositioned_set:
+                                            row.label(text="", icon='CHECKMARK')
+                                        op = row.operator("crossrig.reposition_bone", text=bone_name)
+                                        op.bone_name = bone_name
+                            else:
+                                # Display bones in this group (2 columns)
+                                # Get repositioned bones history
+                                history = prefs.bone_reposition_history
+                                repositioned_set = set(history.split(',')) if history else set()
+
+                                flow = group_box.grid_flow(row_major=True, columns=2, align=True)
+
+                                for bone_name in bones:
+                                    row = flow.row(align=True)
+                                    # Show checkmark for repositioned bones
+                                    if bone_name in repositioned_set:
+                                        row.label(text="", icon='CHECKMARK')
+                                    op = row.operator("crossrig.reposition_bone", text=bone_name)
+                                    op.bone_name = bone_name
+
+                    # Show repositioned bones count
+                    history = prefs.bone_reposition_history
+                    repositioned_count = len([b for b in history.split(',') if b]) if history else 0
+
+                    if repositioned_count > 0:
+                        row = sub_box.row()
+                        row.label(text=f"Repositioned: {repositioned_count} bones", icon='INFO')
+
+                    # Clear history button
+                    if repositioned_count > 0:
+                        row = sub_box.row()
+                        row.operator("crossrig.clear_bone_reposition_history", text="Clear History", icon='X')
+
+                    # Exit button
+                    row = sub_box.row()
+                    row.operator("crossrig.exit_bone_reposition_mode", text="Exit Mode", icon='CANCEL')
 
             # === Template Management Subsection ===
             col.separator()

@@ -11,6 +11,7 @@ from . import armature_template_operators
 from . import animation_transfer_operators
 from . import bone_mapping_operators
 from . import smart_rig_operators
+from . import bone_reposition_operators
 from . import panels
 from . import handlers
 
@@ -24,6 +25,7 @@ def register():
     animation_transfer_operators.register()
     bone_mapping_operators.register()
     smart_rig_operators.register()
+    bone_reposition_operators.register()
     panels.register()
     handlers.register()
 
@@ -32,6 +34,7 @@ def unregister():
     """Unregister all Blender adapter classes."""
     handlers.unregister()
     panels.unregister()
+    bone_reposition_operators.unregister()
     smart_rig_operators.unregister()
     bone_mapping_operators.unregister()
     animation_transfer_operators.unregister()
